@@ -4,9 +4,9 @@ import { Router } from 'express';
 
 import { config } from '../config.mjs';
 import { HttpError } from '../middleware/errorHandler.mjs';
-import { convertAudioStream } from '../services/convert.service.mjs';
+import { convertAudioFile } from '../services/convert.service.mjs';
 import { detectPlatform } from '../services/platform.service.mjs';
-import { downloadMergedVideo, mapYtDlpError, streamBestAudio } from '../services/ytdlp.service.mjs';
+import { downloadBestAudio, downloadMergedVideo } from '../services/ytdlp.service.mjs';
 
 export const downloadRouter = Router();
 
@@ -80,41 +80,42 @@ async function handleVideoDownload(req, res, next, { url, title }) {
   readStream.pipe(res);
 }
 
-function handleAudioDownload(req, res, next, { url, title, format }) {
+async function handleAudioDownload(req, res, next, { url, title, format }) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), config.downloadTimeoutMs);
-
-  const ytdlpStream = streamBestAudio(url, controller.signal);
-  const ffmpeg = convertAudioStream(ytdlpStream, format);
-
-  // yt-dlp-wrap kills the yt-dlp process itself on abort, but our own ffmpeg
-  // process (spawned separately, not through yt-dlp) needs an explicit kill
-  // too - otherwise it keeps transcoding into a broken pipe after a client
-  // disconnect.
   res.on('close', () => {
-    clearTimeout(timeout);
-    if (!res.writableFinished) {
-      controller.abort();
-      ffmpeg.kill();
-    }
+    if (!res.writableFinished) controller.abort();
   });
 
-  ytdlpStream.on('error', (err) => {
-    ffmpeg.kill();
-    if (controller.signal.aborted) {
-      return failDownload(res, next, new HttpError(499, 'Download wurde abgebrochen.', 'CANCELLED'));
-    }
-    const mapped = mapYtDlpError(err);
-    failDownload(res, next, new HttpError(422, mapped.message, mapped.code));
+  let tempFilePath;
+  try {
+    tempFilePath = await downloadBestAudio({ url, signal: controller.signal });
+  } catch (err) {
+    return next(err);
+  } finally {
+    clearTimeout(timeout);
+  }
+  const cleanupTempFile = () => fs.promises.unlink(tempFilePath).catch(() => {});
+
+  const ffmpeg = convertAudioFile(tempFilePath, format);
+
+  // The download timeout above only covers the yt-dlp step; ffmpeg itself
+  // still needs an explicit kill on client disconnect, otherwise it keeps
+  // transcoding into a broken pipe.
+  res.on('close', () => {
+    if (!res.writableFinished) ffmpeg.kill();
   });
 
   let stderr = '';
   ffmpeg.stderr.on('data', (chunk) => {
     stderr += chunk;
   });
-  ffmpeg.on('error', (err) => failDownload(res, next, err));
+  ffmpeg.on('error', (err) => {
+    cleanupTempFile();
+    failDownload(res, next, err);
+  });
   ffmpeg.on('close', (code) => {
-    clearTimeout(timeout);
+    cleanupTempFile();
     if (code !== 0 && !res.writableFinished) {
       console.error(`ffmpeg beendete sich mit Code ${code}: ${stderr.slice(-500)}`);
       failDownload(res, next, new HttpError(502, 'Audio-Konvertierung fehlgeschlagen.', 'CONVERSION_FAILED'));
@@ -143,7 +144,7 @@ downloadRouter.get('/download', async (req, res, next) => {
     if (format === 'mp4') {
       await handleVideoDownload(req, res, next, { url, title });
     } else {
-      handleAudioDownload(req, res, next, { url, title, format });
+      await handleAudioDownload(req, res, next, { url, title, format });
     }
   } catch (err) {
     next(err);

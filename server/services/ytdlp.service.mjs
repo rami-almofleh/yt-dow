@@ -234,32 +234,53 @@ export async function downloadMergedVideo({ url, height, signal }) {
 }
 
 /**
- * Streams the best available audio track as-is (no re-encoding) so it can be
- * piped into ffmpeg for mp3/wav conversion without ever touching disk.
+ * Downloads the best available audio track to a temp file on disk (the
+ * caller then feeds that file into ffmpeg for mp3/wav conversion).
+ *
+ * This intentionally does NOT stream yt-dlp's stdout straight into ffmpeg's
+ * stdin anymore: verified against a live video that the bundled ffmpeg-static
+ * build (6.0) misdetects EOF on a live, network-paced WebM/Opus pipe and bails
+ * out with "File ended prematurely" partway through - even though yt-dlp had
+ * sent the full track - while the exact same bytes convert correctly once
+ * they're a complete, seekable file. A pre-downloaded file sidesteps the bug
+ * entirely. The caller owns the returned path and must delete it once done.
  */
-export function streamBestAudio(url, signal) {
-  return ytDlpWrap.execStream(
-    [
-      url,
-      '-f',
-      'bestaudio/best',
-      '-o',
-      '-',
-      '--no-playlist',
-      '--no-warnings',
-      '--socket-timeout',
-      '15',
-      // See downloadMergedVideo() above: without this, a fragment that fails
-      // (e.g. a transient anti-bot 403) is silently dropped and the process
-      // still exits 0, so the audio just comes out shorter every time -
-      // never a fixed length, never an error.
-      '--no-skip-unavailable-fragments',
-      '--fragment-retries',
-      '20',
-    ],
-    {},
-    signal,
-  );
+export async function downloadBestAudio({ url, signal }) {
+  const tempFilePath = path.join(os.tmpdir(), `amapin-${randomUUID()}.audio`);
+
+  try {
+    await ytDlpWrap.execPromise(
+      [
+        url,
+        '-f',
+        'bestaudio/best',
+        '-o',
+        tempFilePath,
+        '--no-playlist',
+        '--no-warnings',
+        '--socket-timeout',
+        '15',
+        // Without this, a fragment that fails (e.g. a transient anti-bot 403)
+        // is silently dropped and the process still exits 0, so the audio
+        // just comes out shorter every time - never a fixed length, never an
+        // error.
+        '--no-skip-unavailable-fragments',
+        '--fragment-retries',
+        '20',
+      ],
+      {},
+      signal,
+    );
+  } catch (err) {
+    await fs.promises.unlink(tempFilePath).catch(() => {});
+    if (signal?.aborted) {
+      throw new HttpError(499, 'Download wurde abgebrochen.', 'CANCELLED');
+    }
+    const mapped = mapYtDlpError(err);
+    throw new HttpError(422, mapped.message, mapped.code);
+  }
+
+  return tempFilePath;
 }
 
 export { mapYtDlpError };
