@@ -11,9 +11,11 @@ import { HttpError } from '../middleware/errorHandler.mjs';
 // yt-dlp-wrap is CommonJS; Node's ESM interop surfaces its `export default`
 // as `.default` on the imported object instead of unwrapping it directly.
 const YTDlpWrap = YTDlpWrapModule.default ?? YTDlpWrapModule;
-const ytDlpWrap = new YTDlpWrap();
+const ytDlpWrap = new YTDlpWrap(config.ytDlpPath);
 
 const INFO_TIMEOUT_MS = 20_000;
+
+const cookiesArgs = config.cookiesPath ? ['--cookies', config.cookiesPath] : [];
 
 function mapYtDlpError(err) {
   const message = String(err?.message ?? err ?? '');
@@ -141,7 +143,7 @@ export async function fetchVideoInfo(url, platform) {
   let stdout;
   try {
     stdout = await ytDlpWrap.execPromise(
-      [url, '--dump-json', '--no-playlist', '--no-warnings', '--socket-timeout', '15'],
+      [url, '--dump-json', '--no-playlist', '--no-warnings', '--socket-timeout', '15', ...cookiesArgs],
       {},
       controller.signal,
     );
@@ -217,6 +219,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
         '--no-skip-unavailable-fragments',
         '--fragment-retries',
         '20',
+        ...cookiesArgs,
       ],
       {},
       signal,
@@ -267,6 +270,7 @@ export async function downloadBestAudio({ url, signal }) {
         '--no-skip-unavailable-fragments',
         '--fragment-retries',
         '20',
+        ...cookiesArgs,
       ],
       {},
       signal,
