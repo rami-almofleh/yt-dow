@@ -16,9 +16,23 @@ const ytDlpWrap = new YTDlpWrap(config.ytDlpPath);
 const INFO_TIMEOUT_MS = 20_000;
 
 const cookiesArgs = config.cookiesPath ? ['--cookies', config.cookiesPath] : [];
+// Newer YouTube client variants require solving a JS "n"/signature challenge
+// to get real format URLs; without a solver script, formats silently come
+// back video/audio-less ("Requested format is not available"). This lets
+// yt-dlp fetch the (cached-after-first-use) solver from GitHub instead of
+// requiring locally pre-cached npm packages - see yt-dlp's EJS wiki page.
+const remoteComponentsArgs = ['--remote-components', 'ejs:github'];
 
 function mapYtDlpError(err) {
-  const message = String(err?.message ?? err ?? '');
+  const fullMessage = String(err?.message ?? err ?? '');
+  // yt-dlp's own stderr routinely logs benign lines mentioning "cookies" or
+  // "login" (e.g. "[debug] Found YouTube account cookies") even on success.
+  // Matching the whole captured output against those keywords misclassifies
+  // unrelated failures as auth errors, so only look at yt-dlp's actual
+  // "ERROR:" line(s) when present, and fall back to the full message only
+  // for errors that didn't originate from yt-dlp itself (e.g. our own abort).
+  const errorLines = fullMessage.match(/^ERROR:.*$/gm);
+  const message = errorLines ? errorLines.join('\n') : fullMessage;
   if (/private|login|rate.?limit|restricted|sign in|cookies/i.test(message)) {
     return {
       code: 'AUTH_REQUIRED',
@@ -143,7 +157,16 @@ export async function fetchVideoInfo(url, platform) {
   let stdout;
   try {
     stdout = await ytDlpWrap.execPromise(
-      [url, '--dump-json', '--no-playlist', '--no-warnings', '--socket-timeout', '15', ...cookiesArgs],
+      [
+        url,
+        '--dump-json',
+        '--no-playlist',
+        '--no-warnings',
+        '--socket-timeout',
+        '15',
+        ...cookiesArgs,
+        ...remoteComponentsArgs,
+      ],
       {},
       controller.signal,
     );
@@ -220,6 +243,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
         '--fragment-retries',
         '20',
         ...cookiesArgs,
+        ...remoteComponentsArgs,
       ],
       {},
       signal,
@@ -271,6 +295,7 @@ export async function downloadBestAudio({ url, signal }) {
         '--fragment-retries',
         '20',
         ...cookiesArgs,
+        ...remoteComponentsArgs,
       ],
       {},
       signal,
