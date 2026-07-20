@@ -690,3 +690,42 @@ Status: Offen
   Regel gilt jetzt nur noch für Audio (MP3/WAV). Für MP4 ist ein kurzlebiges Temp-File technisch
   notwendig, da ein valider MP4-Merge einen seekable Output braucht – per Live-Test verifiziert, Details
   siehe Ergebnis von Schritt 4.
+
+
+server {
+server_name yt-dow.almofleh.com;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt;
+        default_type "text/plain";
+        try_files $uri =404;
+    }
+
+    root /home/rami/apps/yt-dow/dist/amapin/browser;
+    index index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/yt-dow.almofleh.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/yt-dow.almofleh.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+if ($host = yt-dow.almofleh.com) {
+return 301 https://$host$request_uri;
+} # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+    server_name yt-dow.almofleh.com;
+    return 404; # managed by Certbot
+
+
+}

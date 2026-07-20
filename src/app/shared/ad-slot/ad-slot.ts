@@ -87,14 +87,18 @@ export class AdSlot {
   }
 
   private ensureAdSenseScriptLoaded(): void {
-    if (document.querySelector('script[data-amapin-adsense]')) {
+    const scriptSrc = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${this.adSenseClientId}`;
+    // Dedup über den src-Wert statt über ein eigenes data-Attribut auf
+    // Googles Skript-Tag: AdSense validiert das Tag selbst und warnt (in der
+    // Konsole, "doesn't support ... attribute"), wenn dort ein nicht
+    // erwartetes Attribut auftaucht - live beobachtet, nicht nur vermutet.
+    if (document.querySelector(`script[src="${scriptSrc}"]`)) {
       return;
     }
     const script = document.createElement('script');
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${this.adSenseClientId}`;
+    script.src = scriptSrc;
     script.async = true;
     script.crossOrigin = 'anonymous';
-    script.dataset['amapinAdsense'] = 'true';
     document.head.appendChild(script);
   }
 }
