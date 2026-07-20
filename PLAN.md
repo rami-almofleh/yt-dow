@@ -540,19 +540,111 @@ Ergebnis:
   Schritt 16 vorgemerkt).
 
 ### Schritt 11: Cookie-Consent & Google Consent Mode
-Status: 🔄 Aktuell
+Status: ✅ Erledigt
 
-- [ ] Consent-Banner (Ads erst nach Zustimmung laden), Zustimmung in `localStorage`/Cookie merken.
-- [ ] Google Consent Mode v2 korrekt verdrahten (notwendig für EWR/Deutschland).
-- Ergebnis:
+- [x] Consent-Banner (Ads erst nach Zustimmung laden), Zustimmung in `localStorage`/Cookie merken.
+- [x] Google Consent Mode v2 korrekt verdrahten (notwendig für EWR/Deutschland).
+
+Ergebnis:
+- **War bereits vollständig implementiert, aber nicht als solches dokumentiert:** Der Code für diesen
+  Schritt existierte schon (offenbar im selben Zug wie Schritt 10 mitgebaut), `PLAN.md` war dabei aber
+  nicht aktualisiert worden (Status noch `🔄 Aktuell`, Checkboxen leer, kein Ergebnis-Text). Statt das
+  einfach zu übernehmen, wurde der komplette Consent-Flow jetzt live im Browser verifiziert, bevor der
+  Schritt als erledigt markiert wird (siehe unten) – kein Blindvertrauen auf vorhandenen Code.
+- **`AdConsentService`** (`src/app/core/ad-consent.service.ts`): Signal-basierter Status
+  (`undecided`/`granted`/`denied`), persistiert in `localStorage` (`amapin-ads-consent`, defensiv per
+  `try/catch` wie der Theme-Toggle aus Schritt 6). `granted()` ist exakt das Gate, das `AdSlot` aus
+  Schritt 10 bereits konsumiert – keine Änderung an `AdSlot` nötig. `reopenBanner()` erlaubt das
+  nachträgliche Ändern der Wahl.
+- **Google Consent Mode v2** korrekt zweigeteilt:
+  - `src/index.html`: Inline-Skript ganz am Anfang von `<head>` (muss vor jedem Google-Tag laufen, daher
+    nicht im Angular-Bundle) setzt `gtag('consent', 'default', {...})` mit `ad_storage`/`ad_user_data`/
+    `ad_personalization` global auf `denied` plus `wait_for_update: 500`. Direkt danach liest dasselbe
+    Skript synchron aus `localStorage`, ob bereits zugestimmt wurde, und ruft in dem Fall sofort
+    `gtag('consent', 'update', ...)` mit `granted` auf – noch bevor Angular überhaupt bootet.
+  - `src/app/core/google-consent.ts` (`updateGoogleAdConsent()`): zur Laufzeit aufgerufen, wenn der
+    Nutzer im Banner klickt.
+  - Kein `analytics_storage` gesetzt – bewusst, da die App kein Google Analytics einsetzt, nur AdSense.
+  - Kein `region`-Parameter gesetzt – bewusste, konservativere Entscheidung: Default ist weltweit
+    `denied`, das deckt EWR/Deutschland vollständig ab (eher strenger als nötig für Nicht-EWR-Nutzer,
+    aber rechtlich unbedenklich; eine Region-Einschränkung wäre nur nötig, um außerhalb der EWR laxere
+    Defaults zu fahren, was hier nicht gewünscht ist).
+- **`ConsentBanner`** (`src/app/features/consent-banner/`): Fixed-position-Banner, zwei gleichwertige
+  Buttons "Ablehnen"/"Alle akzeptieren" nebeneinander (keiner in einem Untermenü versteckt – das ist in
+  Deutschland/EU rechtlich relevant, siehe Rechtsprechung zu Cookie-Bannern). Footer-Link
+  "Cookie-Einstellungen" (`app.html`) ruft `reopenBanner()`, um die Wahl jederzeit zu ändern. Bewusst
+  binäres Grant/Deny statt granularer Kategorien: Es gibt nur eine einzige optionale Kategorie (Werbung/
+  AdSense), technisch notwendige Cookies brauchen laut Gesetz ohnehin keine Zustimmung – eine
+  Kategorie-Matrix wäre hier Overengineering.
+- **Live im Browser verifiziert (nicht nur Code gelesen):**
+  1. Erster Besuch → Banner erscheint automatisch, Screenshot bestätigt sauberes Layout (Desktop + Mobile
+     375px, kein horizontales Scrollen, Buttons gut große Touch-Targets).
+  2. "Ablehnen" geklickt → Banner schließt, `localStorage` → `"denied"`, `dataLayer` enthält
+     `consent update` mit allen drei Werten `denied`.
+  3. "Cookie-Einstellungen" im Footer geklickt → Banner öffnet sich erneut korrekt.
+  4. "Alle akzeptieren" geklickt → Banner schließt, `localStorage` → `"granted"`, `dataLayer` enthält
+     `consent update` mit allen drei Werten `granted`.
+  5. Seite neu geladen (Zustimmung bereits gespeichert) → Banner bleibt **zu** (kein erneutes Fragen),
+     `dataLayer`-Reihenfolge bestätigt exakt das erwartete Verhalten: zuerst `default: denied` (Inline-
+     Skript), sofort danach `update: granted` (derselbe Inline-Skript-Block, aus `localStorage`) – beides
+     vor dem ersten Angular-Log.
+  6. Keine Konsolenfehler in keinem der obigen Schritte.
+- **Für Schritt 12 vorgemerkt:** Der Banner verlinkt bereits auf `/datenschutz`
+  (`src/app/pages/privacy/`), die Seite selbst ist aber noch ein Platzhalter ("wird in Schritt 12
+  ausgefüllt") – das ist die nächste, bereits erwartete Abhängigkeit.
 
 ### Schritt 12: Rechtstexte
-Status: Offen
+Status: 🔄 Aktuell (blockiert auf eine fehlende Angabe, siehe unten)
 
-- [ ] Impressum-Seite.
-- [ ] Datenschutzerklärung (inkl. Hinweis auf Google Ads/Cookies).
-- [ ] Nutzungsbedingungen mit Disclaimer zur rechtmäßigen Nutzung (Urheberrecht liegt beim Nutzer).
-- Ergebnis:
+- [~] Impressum-Seite. – **Inhaltlich fertig, aber unvollständig:** Anschrift fehlt noch (Pflichtangabe
+      nach § 5 DDG). Sobald nachgereicht, nur noch in `impressum.html`/`privacy.html` einsetzen und
+      Checkbox/Status hier auf erledigt setzen.
+- [x] Datenschutzerklärung (inkl. Hinweis auf Google Ads/Cookies).
+- [x] Nutzungsbedingungen mit Disclaimer zur rechtmäßigen Nutzung (Urheberrecht liegt beim Nutzer).
+
+Ergebnis (Zwischenstand):
+- **Bewusst nicht geraten, was rechtlich bindend ist:** Für das Impressum sind Name/Anschrift/Kontakt
+  Pflichtangaben, die ich nicht annehmen oder platzhalterhaft erfinden darf (siehe Plan-Regel 6). Beim
+  Nutzer nachgefragt: Betreiber ist eine **Privatperson** (Rami Almofleh, E-Mail
+  `rami.almofleh@web.de`). Die **ladungsfähige Anschrift steht noch aus** – zweimal nachgefragt, bisher
+  nicht erhalten. Damit das nicht als "fertig" durchrutscht, ist der Platzhalter im UI selbst bewusst
+  unübersehbar (roter, fettgedruckter Text `[Anschrift folgt – vor Veröffentlichung zwingend ergänzen]`
+  in `impressum.html` und `privacy.html`) statt in einem Kommentar versteckt, den man leicht übersieht.
+  **Vor jedem echten Deployment zwingend nachtragen.**
+- **Gemeinsames Layout statt dreifacher Duplikation:** Alle drei Rechtsseiten (Impressum, Datenschutz,
+  Nutzungsbedingungen) nutzen identisches Layout (Überschriften, Absätze, Listen, `<address>`) – dafür
+  eine globale `.legal-page`-Klasse in `src/styles.scss` ergänzt statt sie in drei einzelnen
+  Komponenten-SCSS-Dateien zu duplizieren. Keine der drei Seiten-Komponenten hat dadurch noch eine
+  eigene `.scss`-Datei (auch `privacy.scss` entfernt, war nur noch die alte Duplizierung).
+- **Neue Seiten/Routen:** `src/app/pages/impressum/` (neu), `src/app/pages/terms/` (neu,
+  `/nutzungsbedingungen`), `src/app/pages/privacy/privacy.html` (Platzhalter-Text durch echten Inhalt
+  ersetzt). `app.routes.ts` um beide neuen Pfade ergänzt.
+- **Datenschutzerklärung inhaltlich an den tatsächlichen Code verifiziert, nicht angenommen:** Vor dem
+  Schreiben nachgeschaut, was wirklich passiert – `server/middleware/requestLogger.mjs` loggt bewusst
+  **keine** IP-Adressen (nur Methode/Pfad/Status/Dauer), IP-Adressen fließen nur kurzzeitig ins
+  In-Memory-Rate-Limiting (Schritt 5, 10-Minuten-Fenster) ein; alle drei tatsächlich verwendeten
+  `localStorage`-Keys (`amapin-theme`, `amapin-ads-consent`, `amapin-download-history`) sind einzeln mit
+  Zweck benannt, keine erfundenen/generischen "Cookies"-Floskeln. Abschnitt zu Google AdSense verweist
+  konsistent auf den bereits gebauten Consent-Mechanismus aus Schritt 11 (Standard „denied“, Widerruf
+  jederzeit über „Cookie-Einstellungen“). Abschnitt „Hosting“ bewusst noch als Platzhalter markiert, da
+  Schritt 15 (Deployment) den tatsächlichen Anbieter erst festlegt – hier nichts vorweggenommen, was noch
+  nicht feststeht.
+- **Nutzungsbedingungen mit dem im Plan geforderten Disclaimer:** Abschnitt 4 stellt unmissverständlich
+  klar, dass Amapin selbst keine Nutzungsrechte an den abgerufenen Inhalten einräumt und die
+  Verantwortung für eine rechtmäßige Nutzung (Urheberrecht, Plattform-AGB) beim Nutzer liegt – als
+  hervorgehobener `<strong>`-Absatz, nicht im Fließtext versteckt.
+- **Footer erweitert** (`app.html`/`app.scss`): jetzt vier Einträge (Impressum, Datenschutz,
+  Nutzungsbedingungen, Cookie-Einstellungen) statt zwei. Dabei einen echten Layout-Bug vor dem
+  Live-Test bemerkt und behoben: `.shell__footer-links` hatte kein `flex-wrap`, vier Einträge auf
+  schmalen Viewports hätten also horizontal überlaufen können – `flex-wrap: wrap` ergänzt.
+- **Live getestet (Desktop + Mobile 375px):** Alle drei neuen/aktualisierten Seiten über die
+  Footer-Links angesteuert und den gerenderten Inhalt per Screenshot geprüft (Impressum-Platzhalter gut
+  sichtbar rot, Datenschutz- und Nutzungsbedingungen-Inhalt korrekt formatiert inkl. `<strong>`-Hervorhebung).
+  Footer auf Mobile bricht sauber in zwei Zeilen um, kein horizontales Scrollen. `ng build` (nur die
+  bereits aus Schritt 8 bekannte Bundle-Budget-Warnung, kein Fehler) und `ng test` liefen grün.
+- **Offen, bevor dieser Schritt komplett auf ✅ gesetzt werden kann:** Anschrift für das Impressum vom
+  Nutzer nachreichen lassen, dann in `impressum.html` und `privacy.html` die
+  `[Anschrift folgt – …]`-Platzhalter ersetzen.
 
 ---
 

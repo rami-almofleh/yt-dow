@@ -46,3 +46,54 @@ body {
   color: var(--mat-sys-on-surface);
   -webkit-font-smoothing: antialiased;
 }
+
+// Gemeinsames Layout für Impressum/Datenschutz/Nutzungsbedingungen (Schritt
+// 12) - global statt dreifach dupliziert pro Komponente, da alle drei Seiten
+// exakt dasselbe Text-Layout brauchen, keine eigenen Abweichungen.
+.legal-page {
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: 3rem 1rem;
+
+  h1 {
+    font: var(--mat-sys-headline-small);
+    margin: 0 0 1.5rem;
+  }
+
+  h2 {
+    font: var(--mat-sys-title-large);
+    margin: 2rem 0 0.75rem;
+  }
+
+  p,
+  li {
+    font: var(--mat-sys-body-large);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.5rem;
+  }
+
+  a {
+    color: var(--mat-sys-primary);
+  }
+
+  strong {
+    color: var(--mat-sys-on-surface);
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  .legal-page__todo {
+    color: var(--mat-sys-error);
+    font-weight: 600;
+  }
+}
