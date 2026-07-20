@@ -1,0 +1,106 @@
+@use '../styles/breakpoints' as bp;
+
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 0;
+  background: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface);
+
+  &:focus-visible {
+    left: 0;
+  }
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.shell__header {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+}
+
+.shell__header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 0.75rem 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand__name {
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-on-surface);
+}
+
+.shell__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 1.5rem 1rem;
+
+  @include bp.desktop-up {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.shell__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.shell__footer {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+  padding: 1rem;
+  text-align: center;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+
+  p {
+    margin: 0 0 0.375rem;
+  }
+}
+
+.shell__footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  a,
+  .shell__footer-link-button {
+    color: var(--mat-sys-on-surface-variant);
+    text-decoration: underline;
+  }
+}
+
+.shell__footer-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}

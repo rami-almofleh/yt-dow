@@ -1,1 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+html {
+  // Lets Material's `color-scheme` theme-type emit native CSS `light-dark()`
+  // values: browsers follow the OS preference automatically, and app.ts can
+  // override it per-user by setting `color-scheme` explicitly on this element.
+  color-scheme: light dark;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$orange-palette,
+        theme-type: color-scheme,
+      ),
+      typography: (
+        plain-family: (
+          'Inter',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif,
+        ),
+      ),
+      density: 0,
+    )
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font: var(--mat-sys-body-large);
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  -webkit-font-smoothing: antialiased;
+}

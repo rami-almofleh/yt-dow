@@ -1,11 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="utf-8">
   <title>Amapin</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // Google Consent Mode v2: muss laufen, bevor irgendein Google-Tag feuert -
+    // deshalb als Inline-Skript ganz am Anfang von <head>, nicht erst im
+    // Angular-Bundle (das lädt zu spät). Default ist "denied", bis der Nutzer
+    // im Consent-Banner zustimmt (src/app/features/consent-banner).
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500
+    });
+    try {
+      if (localStorage.getItem('amapin-ads-consent') === 'granted') {
+        gtag('consent', 'update', {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted'
+        });
+      }
+    } catch (e) {
+      // localStorage nicht verfügbar (z. B. Privatmodus) - Default "denied" bleibt bestehen.
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

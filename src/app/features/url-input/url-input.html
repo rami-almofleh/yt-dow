@@ -1,0 +1,63 @@
+<form class="url-form" (ngSubmit)="submit()" novalidate>
+  <div class="url-form__row">
+    <mat-form-field class="url-form__field" appearance="outline">
+      <mat-label>Link zu YouTube, Facebook, Instagram oder TikTok</mat-label>
+
+      @if (detectedPlatform(); as platform) {
+        <app-platform-icon matPrefix [platform]="platform" />
+      }
+
+      <input
+        matInput
+        type="url"
+        name="videoUrl"
+        autocomplete="off"
+        inputmode="url"
+        autofocus
+        placeholder="https://…"
+        [ngModel]="urlValue()"
+        (ngModelChange)="onInputChange($event)"
+        [attr.aria-invalid]="showFormatError()"
+        [attr.aria-describedby]="showFormatError() ? 'url-format-error' : null"
+      />
+
+      <button
+        matSuffix
+        mat-icon-button
+        type="button"
+        aria-label="Link aus der Zwischenablage einfügen"
+        (click)="onPaste()"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path
+            d="M9 2a1 1 0 0 0-1 1v1H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 0 0-1-1H9Zm0 2h6v2H9V4ZM7 6h1v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V6h1v13H7V6Z"
+          />
+        </svg>
+      </button>
+    </mat-form-field>
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="url-form__submit"
+      [disabled]="isEmpty() || detectedPlatform() === null || lookup.status() === 'loading'"
+    >
+      @if (lookup.status() === 'loading') {
+        <mat-progress-spinner diameter="20" mode="indeterminate" />
+      } @else {
+        Video suchen
+      }
+    </button>
+  </div>
+
+  @if (showFormatError()) {
+    <p id="url-format-error" class="field-message field-message--error" role="alert">
+      Bitte einen gültigen Link von YouTube, Facebook, Instagram oder TikTok einfügen.
+    </p>
+  }
+</form>
+
+@if (lookup.status() === 'error') {
+  <p class="field-message field-message--error" role="alert">{{ lookup.errorMessage() }}</p>
+}

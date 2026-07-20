@@ -1,0 +1,68 @@
+@if (lookup.status() === 'success' && lookup.videoInfo(); as info) {
+  <article class="preview">
+    <div class="preview__media">
+      @if (info.thumbnailUrl) {
+        <img class="preview__thumbnail" [src]="info.thumbnailUrl" [alt]="info.title" />
+      } @else {
+        <div class="preview__thumbnail preview__thumbnail--placeholder" aria-hidden="true"></div>
+      }
+
+      @if (durationLabel(); as duration) {
+        <span class="preview__duration">{{ duration }}</span>
+      }
+    </div>
+
+    <div class="preview__body">
+      <div class="preview__badge">
+        <app-platform-icon [platform]="info.platform" />
+        <span>{{ info.platformLabel }}</span>
+      </div>
+
+      <h2 class="preview__title">{{ info.title }}</h2>
+
+      <mat-button-toggle-group
+        class="preview__format-toggle"
+        aria-label="Format wählen"
+        [value]="selection.format()"
+        (change)="onFormatChange($event.value)"
+      >
+        <mat-button-toggle value="mp4">Video (MP4)</mat-button-toggle>
+        <mat-button-toggle value="mp3">MP3</mat-button-toggle>
+        <mat-button-toggle value="wav">WAV</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (selection.format() === 'mp4') {
+        <mat-form-field class="preview__quality" appearance="outline">
+          <mat-label>Qualität</mat-label>
+          <mat-select [value]="selection.height()" (selectionChange)="selection.selectHeight($event.value)">
+            @for (quality of info.videoQualities; track quality.id) {
+              <mat-option [value]="quality.height">
+                {{ quality.label }}
+                @if (sizeLabel(quality.estimatedBytes); as size) {
+                  <span class="preview__size"> · {{ size }}</span>
+                }
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      } @else if (currentAudioSizeLabel(); as size) {
+        <p class="preview__size-hint">Geschätzte Größe: {{ size }}</p>
+      }
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        class="preview__download"
+        [disabled]="downloadService.isDownloading()"
+        (click)="onDownload()"
+      >
+        @if (downloadService.isDownloading()) {
+          <mat-progress-spinner diameter="20" mode="indeterminate" />
+        } @else {
+          Herunterladen
+        }
+      </button>
+    </div>
+  </article>
+}

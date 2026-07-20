@@ -1,0 +1,58 @@
+@use '../../../styles/breakpoints' as bp;
+
+.consent-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--mat-sys-surface-container-highest);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 -4px 12px rgb(0 0 0 / 15%);
+
+  @include bp.tablet-up {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+  }
+}
+
+.consent-banner__content {
+  max-width: 60rem;
+}
+
+.consent-banner__title {
+  font: var(--mat-sys-title-medium);
+  margin: 0 0 0.25rem;
+}
+
+.consent-banner__content p {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+
+  a {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.consent-banner__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+
+  button {
+    flex: 1;
+  }
+
+  @include bp.tablet-up {
+    button {
+      flex: none;
+    }
+  }
+}
