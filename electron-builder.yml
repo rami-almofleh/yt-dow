@@ -17,11 +17,14 @@ extraResources:
 asarUnpack:
   - node_modules/ffmpeg-static/**
 publish: null
+# Explicit: guarantees no attempt to sign with a real Developer ID certificate
+# (which costs money) or notarize. scripts/afterSign.cjs still applies a free
+# ad-hoc signature afterwards - required for Apple Silicon to run the binary
+# at all, see that file for why. (afterSign only runs for the mac target.)
+afterSign: scripts/afterSign.cjs
 mac:
   target: dmg
   category: public.app-category.utilities
-  # Explicit: guarantees a genuinely unsigned build, no ad-hoc auto-sign
-  # attempt using whatever identity happens to be in the local keychain.
   identity: null
   hardenedRuntime: false
   # Version-less filename so the landing page's GitHub "latest" download link
