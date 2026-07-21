@@ -39,6 +39,9 @@ const remoteComponentsArgs = ['--remote-components', 'ejs:github'];
 
 function mapYtDlpError(err) {
   const fullMessage = String(err?.message ?? err ?? '');
+  // Only mapYtDlpError() ever sees yt-dlp's raw output - log it so a failure
+  // is diagnosable from `journalctl` alone, without reproducing manually.
+  console.error('[yt-dlp]', fullMessage);
   // yt-dlp's own stderr routinely logs benign lines mentioning "cookies" or
   // "login" (e.g. "[debug] Found YouTube account cookies") even on success.
   // Matching the whole captured output against those keywords misclassifies
