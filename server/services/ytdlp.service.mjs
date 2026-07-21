@@ -15,7 +15,21 @@ const ytDlpWrap = new YTDlpWrap(config.ytDlpPath);
 
 const INFO_TIMEOUT_MS = 20_000;
 
-const cookiesArgs = config.cookiesPath ? ['--cookies', config.cookiesPath] : [];
+// yt-dlp's --cookies is bidirectional: it reads config.cookiesPath AND
+// rewrites the cookie jar back into that same path when it exits. Passing
+// the protected master export straight through would let a single run that
+// gets its account cookies flagged as stale silently overwrite it with a
+// demoted, unauthenticated jar. Instead, every call gets a fresh disposable
+// copy that yt-dlp is free to mutate/corrupt without touching the source of
+// truth.
+const COOKIES_WORKING_PATH = path.join(os.tmpdir(), 'amapin-ytdlp-cookies-working.txt');
+
+async function buildCookiesArgs() {
+  if (!config.cookiesPath) return [];
+  await fs.promises.copyFile(config.cookiesPath, COOKIES_WORKING_PATH);
+  return ['--cookies', COOKIES_WORKING_PATH];
+}
+
 // Newer YouTube client variants require solving a JS "n"/signature challenge
 // to get real format URLs; without a solver script, formats silently come
 // back video/audio-less ("Requested format is not available"). This lets
@@ -164,7 +178,7 @@ export async function fetchVideoInfo(url, platform) {
         '--no-warnings',
         '--socket-timeout',
         '15',
-        ...cookiesArgs,
+        ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
       {},
@@ -242,7 +256,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
         '--no-skip-unavailable-fragments',
         '--fragment-retries',
         '20',
-        ...cookiesArgs,
+        ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
       {},
@@ -294,7 +308,7 @@ export async function downloadBestAudio({ url, signal }) {
         '--no-skip-unavailable-fragments',
         '--fragment-retries',
         '20',
-        ...cookiesArgs,
+        ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
       {},
