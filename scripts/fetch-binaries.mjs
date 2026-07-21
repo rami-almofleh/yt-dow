@@ -10,7 +10,7 @@ import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 import { createGunzip } from 'node:zlib';
 
-import extractZip from 'extract-zip';
+import AdmZip from 'adm-zip';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BIN_DIR = path.join(__dirname, '..', 'resources', 'bin');
@@ -64,7 +64,11 @@ for (const target of targets) {
   console.log(`[${target.key}] deno...`);
   const zipPath = path.join(dir, 'deno.zip');
   await download(`${DENO_BASE}/${target.deno}`, zipPath);
-  await extractZip(zipPath, { dir });
+  // adm-zip, not extract-zip/yauzl: verified extract-zip silently truncates
+  // this specific archive (cuts off the last ~50KB, which is exactly where a
+  // macOS Mach-O code signature lives), producing a binary macOS refuses to
+  // execute at all. adm-zip extracts it byte-correct.
+  new AdmZip(zipPath).extractAllTo(dir, true);
   rmSync(zipPath);
   const extractedDeno = path.join(dir, isWin ? 'deno.exe' : 'deno');
   if (extractedDeno !== exe('deno')) renameSync(extractedDeno, exe('deno'));
