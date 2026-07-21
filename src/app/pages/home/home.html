@@ -1,15 +1,26 @@
-<section class="home">
-  <h1>Amapin</h1>
-  <p>Videos von YouTube, Facebook, Instagram und TikTok herunterladen – als Desktop-App.</p>
+@if (isElectron) {
+  <section class="home home--tool">
+    <h1>Video herunterladen</h1>
+    <p>Füge einen Link von YouTube, Facebook, Instagram oder TikTok ein.</p>
 
-  <a mat-flat-button color="primary" class="home__primary-download" [href]="downloadLinks[primary.os]">
-    Für {{ primary.label }} herunterladen
-  </a>
+    <app-url-input />
+    <app-video-preview />
+    <app-download-history />
+  </section>
+} @else {
+  <section class="home">
+    <h1>Amapin</h1>
+    <p>Videos von YouTube, Facebook, Instagram und TikTok herunterladen – als Desktop-App.</p>
 
-  <p class="home__alt-platforms">
-    Anderes Betriebssystem:
-    @for (platform of others; track platform.os) {
-      <a [href]="downloadLinks[platform.os]">{{ platform.label }}</a>
-    }
-  </p>
-</section>
+    <a mat-flat-button color="primary" class="home__primary-download" [href]="downloadLinks[primary.os]">
+      Für {{ primary.label }} herunterladen
+    </a>
+
+    <p class="home__alt-platforms">
+      Anderes Betriebssystem:
+      @for (platform of others; track platform.os) {
+        <a [href]="downloadLinks[platform.os]">{{ platform.label }}</a>
+      }
+    </p>
+  </section>
+}

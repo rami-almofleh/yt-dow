@@ -56,6 +56,12 @@ async function createWindow() {
       sandbox: true,
     },
   });
+  // Plain "Electron/x.y.z" is already present in ANY Electron app's user
+  // agent (including e.g. Claude's own desktop preview browser), so it can't
+  // tell "our packaged app" apart from "some other Electron-based renderer".
+  // This app-specific marker is what src/app/core/electron-detection.ts
+  // actually checks for.
+  mainWindow.webContents.setUserAgent(`${mainWindow.webContents.getUserAgent()} AmapinDesktop/1.0`);
   mainWindow.loadURL(`http://127.0.0.1:${port}/`);
 
   mainWindow.on('closed', () => {

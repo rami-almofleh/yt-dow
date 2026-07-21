@@ -1,0 +1,76 @@
+name: Build and release desktop app
+
+# Only runs on an explicit version tag push (e.g. `git tag v1.0.0 && git push
+# --tags`) - not on every commit, so normal pushes to main never consume
+# Actions minutes (macOS runners count 10x against the monthly quota on a
+# private repo).
+on:
+  push:
+    tags:
+      - 'v*'
+
+# Needed for softprops/action-gh-release to create/update a release.
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: mac
+            binariesKey: darwin-arm64
+          - os: windows-latest
+            target: win
+            binariesKey: win32-x64
+          - os: ubuntu-latest
+            target: linux
+            binariesKey: linux-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - run: npm ci
+
+      - run: node scripts/fetch-binaries.mjs ${{ matrix.binariesKey }}
+
+      - run: npm run electron:build:${{ matrix.target }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}-artifact
+          path: release/amapin-${{ matrix.target }}.*
+          if-no-files-found: error
+
+  # Single rolling "latest" release, continuously overwritten - the download
+  # links on the landing page (src/app/core/downloads.config.ts) always point
+  # at /releases/latest/download/<file>, so this needs to stay a stable tag
+  # rather than one new release per version.
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect built installers
+        run: |
+          mkdir -p release
+          find artifacts -type f \( -name '*.dmg' -o -name '*.exe' -o -name '*.AppImage' \) -exec cp {} release/ \;
+          ls -la release/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          make_latest: true
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

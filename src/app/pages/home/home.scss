@@ -17,6 +17,15 @@
   }
 }
 
+.home--tool {
+  max-width: none;
+
+  app-url-input {
+    display: block;
+    margin-top: 2rem;
+  }
+}
+
 .home__primary-download {
   display: inline-flex;
   margin-top: 1.5rem;
