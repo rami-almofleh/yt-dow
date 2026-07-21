@@ -37,6 +37,17 @@ async function buildCookiesArgs() {
 // requiring locally pre-cached npm packages - see yt-dlp's EJS wiki page.
 const remoteComponentsArgs = ['--remote-components', 'ejs:github'];
 
+// yt-dlp looks up its own `deno` binary via PATH for JS-challenge solving.
+// The Electron build bundles Deno at an absolute config.denoPath rather than
+// relying on it being installed system-wide, so prepend its directory to the
+// spawned process's PATH. No-op for the default 'deno' (non-absolute, relies
+// on the system PATH, as on the VPS).
+function buildSpawnOptions() {
+  if (!path.isAbsolute(config.denoPath)) return {};
+  const denoDir = path.dirname(config.denoPath);
+  return { env: { ...process.env, PATH: `${denoDir}${path.delimiter}${process.env.PATH ?? ''}` } };
+}
+
 function mapYtDlpError(err) {
   const fullMessage = String(err?.message ?? err ?? '');
   // Only mapYtDlpError() ever sees yt-dlp's raw output - log it so a failure
@@ -184,7 +195,7 @@ export async function fetchVideoInfo(url, platform) {
         ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
-      {},
+      buildSpawnOptions(),
       controller.signal,
     );
   } catch (err) {
@@ -262,7 +273,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
         ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
-      {},
+      buildSpawnOptions(),
       signal,
     );
   } catch (err) {
@@ -314,7 +325,7 @@ export async function downloadBestAudio({ url, signal }) {
         ...(await buildCookiesArgs()),
         ...remoteComponentsArgs,
       ],
-      {},
+      buildSpawnOptions(),
       signal,
     );
   } catch (err) {

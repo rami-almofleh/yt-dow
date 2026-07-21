@@ -44,4 +44,8 @@ __screenshots__/
 Thumbs.db
 
 # Secrets - never commit real session cookies
-cookies.txt
+cookies*.txt
+
+# Downloaded per-platform yt-dlp/ffmpeg/deno binaries for Electron packaging
+/resources/bin
+/release

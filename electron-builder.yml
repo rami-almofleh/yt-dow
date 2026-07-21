@@ -1,0 +1,35 @@
+appId: io.inits.amapin
+productName: amapin
+directories:
+  output: release
+files:
+  - electron/**/*
+  - server/**/*
+  - dist/amapin/browser/**/*
+  - package.json
+  - node_modules/**/*
+extraResources:
+  - from: resources/bin
+    to: bin
+asarUnpack:
+  - node_modules/ffmpeg-static/**
+publish: null
+mac:
+  target: dmg
+  category: public.app-category.utilities
+  # Explicit: guarantees a genuinely unsigned build, no ad-hoc auto-sign
+  # attempt using whatever identity happens to be in the local keychain.
+  identity: null
+  hardenedRuntime: false
+  # Version-less filename so the landing page's GitHub "latest" download link
+  # (see src/app/core/downloads.config.ts) never needs updating per release.
+  artifactName: 'amapin-mac.${ext}'
+win:
+  target: nsis
+  artifactName: 'amapin-win.${ext}'
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+linux:
+  target: AppImage
+  artifactName: 'amapin-linux.${ext}'

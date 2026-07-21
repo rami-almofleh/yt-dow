@@ -1,3 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import express from 'express';
 
 import { config } from './config.mjs';
@@ -22,8 +26,27 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use('/api', healthRouter);
-app.use('/api', infoRateLimiter, infoRouter);
-app.use('/api', downloadRateLimiter, downloadRouter);
+if (config.appMode === 'desktop') {
+  app.use('/api', infoRouter);
+  app.use('/api', downloadRouter);
+} else {
+  app.use('/api', infoRateLimiter, infoRouter);
+  app.use('/api', downloadRateLimiter, downloadRouter);
+}
+
+// Serves the built Angular app from the same origin as /api, so the Electron
+// desktop build needs no CORS/proxy config - frontend calls to /api/* keep
+// working unchanged. No-op on the VPS today (dist/amapin/browser isn't
+// deployed there; nginx serves the frontend separately).
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const staticDir = process.env.STATIC_DIR || path.join(__dirname, '..', 'dist', 'amapin', 'browser');
+if (fs.existsSync(staticDir)) {
+  app.use(express.static(staticDir));
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(staticDir, 'index.html'));
+  });
+}
 
 app.use(notFoundHandler);
 app.use(errorHandler);
@@ -31,6 +54,7 @@ app.use(errorHandler);
 sweepOrphanedTempFiles();
 setInterval(sweepOrphanedTempFiles, CLEANUP_INTERVAL_MS);
 
-app.listen(config.port, () => {
-  console.log(`API-Server läuft auf http://localhost:${config.port} (${config.nodeEnv})`);
+export const server = app.listen(config.port, config.host, () => {
+  const { port } = server.address();
+  console.log(`API-Server läuft auf http://${config.host ?? 'localhost'}:${port} (${config.nodeEnv})`);
 });

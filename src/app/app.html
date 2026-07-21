@@ -40,17 +40,11 @@
     </div>
   </header>
 
-  <app-ad-slot variant="top" />
-
   <div class="shell__body">
     <main class="shell__main" id="main-content">
       <router-outlet />
     </main>
-
-    <app-ad-slot variant="sidebar" />
   </div>
-
-  <app-ad-slot variant="bottom" />
 
   <footer class="shell__footer">
     <p>&copy; 2026 Amapin</p>
@@ -58,11 +52,6 @@
       <a routerLink="/impressum">Impressum</a>
       <a routerLink="/datenschutz">Datenschutz</a>
       <a routerLink="/nutzungsbedingungen">Nutzungsbedingungen</a>
-      <button type="button" class="shell__footer-link-button" (click)="consent.reopenBanner()">
-        Cookie-Einstellungen
-      </button>
     </nav>
   </footer>
 </div>
-
-<app-consent-banner />

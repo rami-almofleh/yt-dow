@@ -1,9 +1,15 @@
 <section class="home">
-  <h1>Video herunterladen</h1>
-  <p>Füge einen Link von YouTube, Facebook, Instagram oder TikTok ein.</p>
+  <h1>Amapin</h1>
+  <p>Videos von YouTube, Facebook, Instagram und TikTok herunterladen – als Desktop-App.</p>
 
-  <app-url-input />
-  <app-ad-slot variant="in-content" />
-  <app-video-preview />
-  <app-download-history />
+  <a mat-flat-button color="primary" class="home__primary-download" [href]="downloadLinks[primary.os]">
+    Für {{ primary.label }} herunterladen
+  </a>
+
+  <p class="home__alt-platforms">
+    Anderes Betriebssystem:
+    @for (platform of others; track platform.os) {
+      <a [href]="downloadLinks[platform.os]">{{ platform.label }}</a>
+    }
+  </p>
 </section>

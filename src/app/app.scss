@@ -91,17 +91,8 @@
   justify-content: center;
   gap: 0.5rem 1rem;
 
-  a,
-  .shell__footer-link-button {
+  a {
     color: var(--mat-sys-on-surface-variant);
     text-decoration: underline;
   }
-}
-
-.shell__footer-link-button {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
 }

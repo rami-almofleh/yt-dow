@@ -1,6 +1,8 @@
 .home {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
+  max-width: 40rem;
+  margin-inline: auto;
 
   h1 {
     font: var(--mat-sys-display-small);
@@ -13,9 +15,26 @@
     max-width: 40ch;
     margin-inline: auto;
   }
+}
 
-  app-url-input {
-    display: block;
-    margin-top: 2rem;
+.home__primary-download {
+  display: inline-flex;
+  margin-top: 1.5rem;
+  height: 3rem;
+  padding-inline: 2rem;
+  font: var(--mat-sys-title-medium);
+}
+
+.home__alt-platforms {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  font: var(--mat-sys-body-medium);
+
+  a {
+    color: var(--mat-sys-primary);
+    text-decoration: underline;
   }
 }

@@ -1,10 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, RouterOutlet } from '@angular/router';
-
-import { AdConsentService } from './core/ad-consent.service';
-import { ConsentBanner } from './features/consent-banner/consent-banner';
-import { AdSlot } from './shared/ad-slot/ad-slot';
 
 const THEME_STORAGE_KEY = 'amapin-theme';
 
@@ -46,12 +42,11 @@ function prefersDarkColorScheme(): boolean {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, MatButtonModule, AdSlot, ConsentBanner],
+  imports: [RouterOutlet, RouterLink, MatButtonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly consent = inject(AdConsentService);
   protected readonly isDarkMode = signal(this.resolveInitialDarkMode());
 
   constructor() {
