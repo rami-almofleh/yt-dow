@@ -46,6 +46,11 @@
   gap: 0.5rem;
 }
 
+.brand__mark {
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .brand__name {
   font: var(--mat-sys-title-medium);
   color: var(--mat-sys-on-surface);

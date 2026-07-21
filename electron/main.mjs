@@ -5,6 +5,11 @@ import { app, BrowserWindow, dialog } from 'electron';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Same source image electron-builder.yml uses to generate the packaged
+// app's .icns/.ico - also applied here so the unpackaged dev app (npm run
+// electron:dev) shows the real icon instead of Electron's default one.
+const ICON_PATH = path.join(__dirname, '..', 'public', 'logo.png');
+
 // Bundled per-platform yt-dlp/ffmpeg/deno binaries (see scripts/fetch-binaries.mjs).
 // Must be set before importing server/index.mjs, since config.mjs reads these
 // env vars at module-load time.
@@ -44,6 +49,7 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: ICON_PATH,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -58,7 +64,14 @@ async function createWindow() {
   });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  // BrowserWindow's `icon` option doesn't affect the macOS Dock tile - only
+  // packaged .app bundles pick that up automatically from the .icns baked in
+  // by electron-builder. Setting it explicitly here covers the unpackaged
+  // dev run (npm run electron:dev) too. Requires the app to be ready.
+  app.dock?.setIcon(ICON_PATH);
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();

@@ -2,6 +2,9 @@ appId: io.inits.amapin
 productName: amapin
 directories:
   output: release
+# electron-builder generates the per-platform .icns/.ico from this single
+# source PNG (needs to be at least 512x512 - public/logo.png is 2000x2000).
+icon: public/logo.png
 files:
   - electron/**/*
   - server/**/*
