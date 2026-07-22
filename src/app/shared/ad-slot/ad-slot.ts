@@ -1,4 +1,5 @@
 import { Component, DestroyRef, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
 import { AdConsentService } from '../../core/ad-consent.service';
 import { AD_SLOT_IDS, ADSENSE_CLIENT_ID } from '../../core/ads.config';
@@ -21,6 +22,7 @@ declare global {
  */
 @Component({
   selector: 'app-ad-slot',
+  imports: [TranslocoDirective],
   templateUrl: './ad-slot.html',
   styleUrl: './ad-slot.scss',
   // Jede Variante braucht andere Außenmaße (z. B. schmale Inhaltsspalte für
@@ -30,7 +32,7 @@ declare global {
   host: {
     '[attr.data-variant]': 'variant()',
     '[attr.role]': "variant() === 'sidebar' ? 'complementary' : null",
-    '[attr.aria-label]': "variant() === 'sidebar' ? 'Werbung' : null",
+    '[attr.aria-label]': "variant() === 'sidebar' ? sidebarAriaLabel() : null",
   },
 })
 export class AdSlot {
@@ -39,12 +41,14 @@ export class AdSlot {
   private readonly consent = inject(AdConsentService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly transloco = inject(TranslocoService);
 
   private hasPushedAd = false;
 
   protected readonly isVisible = signal(false);
   protected readonly adSenseClientId = ADSENSE_CLIENT_ID;
   protected readonly adUnitId = computed(() => AD_SLOT_IDS[this.variant()]);
+  protected readonly sidebarAriaLabel = computed(() => this.transloco.translate('adSlot.sidebarAriaLabel'));
   protected readonly shouldLoadAd = computed(
     () => this.isVisible() && this.consent.granted() && ADSENSE_CLIENT_ID !== '' && this.adUnitId() !== '',
   );

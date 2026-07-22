@@ -1,47 +1,49 @@
-<a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+<ng-container *transloco="let t">
+  <a class="skip-link" href="#main-content">{{ t('shell.skipLink') }}</a>
 
-<div class="shell">
-  <header class="shell__header">
-    <div class="shell__header-inner">
-      <div class="brand">
-        <img class="brand__mark" src="logo.png" width="28" height="28" alt="" />
-        <span class="brand__name">Amapin</span>
+  <div class="shell">
+    <header class="shell__header">
+      <div class="shell__header-inner">
+        <a routerLink="/" class="brand">
+          <img class="brand__mark" src="logo.png" width="28" height="28" alt="" />
+          <span class="brand__name">Amapin</span>
+        </a>
+
+        <button
+          mat-icon-button
+          type="button"
+          class="theme-toggle"
+          [attr.aria-label]="isDarkMode() ? t('shell.themeToggle.toLight') : t('shell.themeToggle.toDark')"
+          (click)="toggleTheme()"
+        >
+          @if (isDarkMode()) {
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 110-6 3 3 0 010 6zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.51 4.93l1.41-1.41L6.34 4.93 4.93 6.34 3.51 4.93zm14.14 14.14l1.41-1.41 1.41 1.41-1.41 1.41-1.41-1.41zM4.93 17.66l1.41 1.41-1.41 1.41-1.41-1.41 1.41-1.41zM17.66 4.93l1.41-1.41 1.41 1.41-1.41 1.41-1.41-1.41zM1 11h3v2H1v-2zm19 0h3v2h-3v-2z"
+              />
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M12.3 3a9 9 0 108.7 13.3A9.3 9.3 0 0112.3 3z" />
+            </svg>
+          }
+        </button>
       </div>
+    </header>
 
-      <button
-        mat-icon-button
-        type="button"
-        class="theme-toggle"
-        [attr.aria-label]="isDarkMode() ? 'Zu hellem Design wechseln' : 'Zu dunklem Design wechseln'"
-        (click)="toggleTheme()"
-      >
-        @if (isDarkMode()) {
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-            <path
-              d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 110-6 3 3 0 010 6zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.51 4.93l1.41-1.41L6.34 4.93 4.93 6.34 3.51 4.93zm14.14 14.14l1.41-1.41 1.41 1.41-1.41 1.41-1.41-1.41zM4.93 17.66l1.41 1.41-1.41 1.41-1.41-1.41 1.41-1.41zM17.66 4.93l1.41-1.41 1.41 1.41-1.41 1.41-1.41-1.41zM1 11h3v2H1v-2zm19 0h3v2h-3v-2z"
-            />
-          </svg>
-        } @else {
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-            <path d="M12.3 3a9 9 0 108.7 13.3A9.3 9.3 0 0112.3 3z" />
-          </svg>
-        }
-      </button>
+    <div class="shell__body">
+      <main class="shell__main" id="main-content">
+        <router-outlet />
+      </main>
     </div>
-  </header>
 
-  <div class="shell__body">
-    <main class="shell__main" id="main-content">
-      <router-outlet />
-    </main>
+    <footer class="shell__footer">
+      <p>&copy; 2026 Amapin</p>
+      <nav class="shell__footer-links">
+        <a routerLink="/impressum">{{ t('shell.footer.impressum') }}</a>
+        <a routerLink="/datenschutz">{{ t('shell.footer.privacy') }}</a>
+        <a routerLink="/nutzungsbedingungen">{{ t('shell.footer.terms') }}</a>
+      </nav>
+    </footer>
   </div>
-
-  <footer class="shell__footer">
-    <p>&copy; 2026 Amapin</p>
-    <nav class="shell__footer-links">
-      <a routerLink="/impressum">Impressum</a>
-      <a routerLink="/datenschutz">Datenschutz</a>
-      <a routerLink="/nutzungsbedingungen">Nutzungsbedingungen</a>
-    </nav>
-  </footer>
-</div>
+</ng-container>

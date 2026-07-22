@@ -4,6 +4,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 import { DownloadFormat, DownloadSelectionService } from '../../core/download-selection.service';
 import { DownloadService } from '../../core/download.service';
@@ -20,6 +21,7 @@ import { PlatformIcon } from '../../shared/platform-icon/platform-icon';
     MatProgressSpinnerModule,
     MatSelectModule,
     PlatformIcon,
+    TranslocoDirective,
   ],
   templateUrl: './video-preview.html',
   styleUrl: './video-preview.scss',

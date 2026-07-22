@@ -4,19 +4,30 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoDirective } from '@jsverse/transloco';
 
+import { DownloadSelectionService } from '../../core/download-selection.service';
 import { detectPlatform } from '../../core/platform';
 import { VideoLookupService } from '../../core/video-lookup.service';
 import { PlatformIcon } from '../../shared/platform-icon/platform-icon';
 
 @Component({
   selector: 'app-url-input',
-  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, PlatformIcon],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    PlatformIcon,
+    TranslocoDirective,
+  ],
   templateUrl: './url-input.html',
   styleUrl: './url-input.scss',
 })
 export class UrlInput {
   protected readonly lookup = inject(VideoLookupService);
+  protected readonly selection = inject(DownloadSelectionService);
 
   protected readonly urlValue = signal('');
   protected readonly touched = signal(false);
@@ -54,5 +65,15 @@ export class UrlInput {
       return;
     }
     this.lookup.fetchInfo(this.urlValue().trim());
+  }
+
+  // Setzt den laufenden Vorgang komplett zurück (Feld, Vorschau, Format-
+  // /Qualitätsauswahl) - der Download-Verlauf (DownloadHistoryService) ist
+  // davon absichtlich unberührt, da völlig unabhängig.
+  protected clear(): void {
+    this.urlValue.set('');
+    this.touched.set(false);
+    this.lookup.reset();
+    this.selection.reset();
   }
 }

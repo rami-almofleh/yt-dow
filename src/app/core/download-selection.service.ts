@@ -30,4 +30,12 @@ export class DownloadSelectionService {
     this._format.set('mp4');
     this._height.set(videoInfo.videoQualities[0]?.height ?? null);
   }
+
+  // Für den Clear-Button in UrlInput: es gibt noch kein VideoInfo, auf dessen
+  // Basis wie in resetTo() sinnvolle Werte abgeleitet werden könnten - daher
+  // einfach auf die Feld-Standardwerte zurück.
+  reset(): void {
+    this._format.set('mp4');
+    this._height.set(null);
+  }
 }

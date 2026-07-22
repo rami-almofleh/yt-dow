@@ -1,19 +1,18 @@
 @if (consent.bannerOpen()) {
-  <div class="consent-banner" role="region" aria-label="Cookie-Hinweis">
+  <div class="consent-banner" role="region" [attr.aria-label]="t('consentBanner.ariaLabel')" *transloco="let t">
     <div class="consent-banner__content">
-      <h2 class="consent-banner__title">Cookies &amp; Werbung</h2>
+      <h2 class="consent-banner__title">{{ t('consentBanner.title') }}</h2>
       <p>
-        Wir verwenden technisch notwendige Cookies, um diese Seite bereitzustellen. Mit deiner
-        Zustimmung nutzen wir außerdem Google AdSense, um die App zu finanzieren – dabei können
-        personenbezogene Daten (z.&nbsp;B. deine IP-Adresse) verarbeitet werden. Mehr dazu in unserer
-        <a routerLink="/datenschutz">Datenschutzerklärung</a>.
+        {{ t('consentBanner.bodyIntro') }}
+        <a routerLink="/datenschutz">{{ t('consentBanner.privacyLinkText') }}</a
+        >{{ t('consentBanner.bodyOutro') }}
       </p>
     </div>
 
     <div class="consent-banner__actions">
-      <button mat-button type="button" (click)="consent.deny()">Ablehnen</button>
+      <button mat-button type="button" (click)="consent.deny()">{{ t('consentBanner.deny') }}</button>
       <button mat-flat-button color="primary" type="button" (click)="consent.grant()">
-        Alle akzeptieren
+        {{ t('consentBanner.acceptAll') }}
       </button>
     </div>
   </div>

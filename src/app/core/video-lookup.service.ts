@@ -38,31 +38,31 @@ export class VideoLookupService {
       },
       error: (err: HttpErrorResponse) => {
         this._videoInfo.set(null);
-        this._errorCode.set(err.error?.error?.code ?? 'UNKNOWN_ERROR');
-        this._errorMessage.set(this.resolveErrorMessage(err));
+        // Unser Backend liefert bei echten Fehlern immer { error: { code, message } }
+        // (siehe server/middleware/errorHandler.mjs) - wenn das da ist, ist es die
+        // genaueste verfügbare Information und hat Vorrang; sie kommt bereits fertig
+        // (deutsch) vom Server, eine Übersetzung dafür bräuchte Backend-i18n, das ist
+        // hier nicht im Umfang. Fehlt sie, wird die Vorlage anhand von errorCode
+        // selbst übersetzen (siehe urlInput.error.* Keys).
+        const backendCode: string | undefined = err.error?.error?.code;
+        const backendMessage: string | undefined = err.error?.error?.message;
+        if (backendCode && backendMessage) {
+          this._errorCode.set(backendCode);
+          this._errorMessage.set(backendMessage);
+        } else if (err.status === 0 || [500, 502, 503, 504].includes(err.status)) {
+          // Kein strukturierter Body: Der Request hat unser Backend gar nicht (mit
+          // einer eigenen Antwort) erreicht. status 0 = Browser konnte keine
+          // Verbindung aufbauen; 502/503/504 = ein davorliegender Reverse-Proxy (im
+          // Dev-Betrieb: Angulars eigener --proxy-config) ist erreichbar, aber der
+          // Node-Prozess dahinter nicht.
+          this._errorCode.set('NETWORK_ERROR');
+          this._errorMessage.set(null);
+        } else {
+          this._errorCode.set('UNKNOWN_ERROR');
+          this._errorMessage.set(null);
+        }
         this._status.set('error');
       },
     });
-  }
-
-  private resolveErrorMessage(err: HttpErrorResponse): string {
-    // Unser Backend liefert bei echten Fehlern immer { error: { code, message } }
-    // (siehe server/middleware/errorHandler.mjs) - wenn das da ist, ist es die
-    // genaueste verfügbare Information und hat Vorrang.
-    const backendMessage: string | undefined = err.error?.error?.message;
-    if (backendMessage) {
-      return backendMessage;
-    }
-
-    // Kein strukturierter Body: Der Request hat unser Backend gar nicht (mit einer
-    // eigenen Antwort) erreicht. status 0 = Browser konnte keine Verbindung
-    // aufbauen; 502/503/504 = ein davorliegender Reverse-Proxy (im Dev-Betrieb:
-    // Angulars eigener --proxy-config) ist erreichbar, aber der Node-Prozess
-    // dahinter nicht - live getestet: Backend gestoppt → Angular-Dev-Proxy
-    // antwortete mit einem eigenen 500 ohne unseren JSON-Body.
-    if (err.status === 0 || [500, 502, 503, 504].includes(err.status)) {
-      return 'Server nicht erreichbar. Bitte prüfe deine Internetverbindung und versuche es erneut.';
-    }
-    return 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
   }
 }

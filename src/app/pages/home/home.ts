@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 import { DOWNLOAD_LINKS, type DesktopOs } from '../../core/downloads.config';
 import { isElectronApp } from '../../core/electron-detection';
@@ -8,6 +9,8 @@ import { DownloadHistory } from '../../features/download-history/download-histor
 import { UrlInput } from '../../features/url-input/url-input';
 import { VideoPreview } from '../../features/video-preview/video-preview';
 
+// Betriebssystem-/Markennamen bleiben unübersetzt (Eigennamen, in allen 4
+// unterstützten Sprachen gleich üblich).
 const PLATFORMS: { os: DesktopOs; label: string }[] = [
   { os: 'mac', label: 'macOS' },
   { os: 'windows', label: 'Windows' },
@@ -16,7 +19,7 @@ const PLATFORMS: { os: DesktopOs; label: string }[] = [
 
 @Component({
   selector: 'app-home',
-  imports: [MatButtonModule, UrlInput, VideoPreview, DownloadHistory],
+  imports: [MatButtonModule, UrlInput, VideoPreview, DownloadHistory, TranslocoDirective],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

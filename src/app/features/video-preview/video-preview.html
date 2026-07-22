@@ -1,5 +1,5 @@
 @if (lookup.status() === 'success' && lookup.videoInfo(); as info) {
-  <article class="preview">
+  <article class="preview" *transloco="let t">
     <div class="preview__media">
       @if (info.thumbnailUrl) {
         <img class="preview__thumbnail" [src]="info.thumbnailUrl" [alt]="info.title" />
@@ -22,18 +22,18 @@
 
       <mat-button-toggle-group
         class="preview__format-toggle"
-        aria-label="Format wählen"
+        [attr.aria-label]="t('videoPreview.chooseFormat')"
         [value]="selection.format()"
         (change)="onFormatChange($event.value)"
       >
-        <mat-button-toggle value="mp4">Video (MP4)</mat-button-toggle>
+        <mat-button-toggle value="mp4">{{ t('videoPreview.formatVideo') }}</mat-button-toggle>
         <mat-button-toggle value="mp3">MP3</mat-button-toggle>
         <mat-button-toggle value="wav">WAV</mat-button-toggle>
       </mat-button-toggle-group>
 
       @if (selection.format() === 'mp4') {
         <mat-form-field class="preview__quality" appearance="outline">
-          <mat-label>Qualität</mat-label>
+          <mat-label>{{ t('videoPreview.quality') }}</mat-label>
           <mat-select [value]="selection.height()" (selectionChange)="selection.selectHeight($event.value)">
             @for (quality of info.videoQualities; track quality.id) {
               <mat-option [value]="quality.height">
@@ -46,7 +46,7 @@
           </mat-select>
         </mat-form-field>
       } @else if (currentAudioSizeLabel(); as size) {
-        <p class="preview__size-hint">Geschätzte Größe: {{ size }}</p>
+        <p class="preview__size-hint">{{ t('videoPreview.estimatedSize') }}: {{ size }}</p>
       }
 
       <button
@@ -60,7 +60,7 @@
         @if (downloadService.isDownloading()) {
           <mat-progress-spinner diameter="20" mode="indeterminate" />
         } @else {
-          Herunterladen
+          {{ t('videoPreview.download') }}
         }
       </button>
     </div>

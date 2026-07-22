@@ -1,8 +1,8 @@
 @if (history.entries().length > 0) {
-  <section class="history">
+  <section class="history" *transloco="let t">
     <div class="history__header">
-      <h3>Zuletzt heruntergeladen</h3>
-      <button mat-button type="button" (click)="history.clear()">Verlauf löschen</button>
+      <h3>{{ t('downloadHistory.title') }}</h3>
+      <button mat-button type="button" (click)="history.clear()">{{ t('downloadHistory.clear') }}</button>
     </div>
 
     <ul class="history__list">
@@ -18,7 +18,7 @@
           <button
             mat-icon-button
             type="button"
-            [attr.aria-label]="'Erneut herunterladen: ' + entry.title"
+            [attr.aria-label]="t('downloadHistory.redownloadAriaLabel', { title: entry.title })"
             [disabled]="downloadService.isDownloading()"
             (click)="redownload(entry)"
           >

@@ -1,4 +1,4 @@
-<div class="ad-slot" [attr.aria-hidden]="shouldLoadAd() ? null : 'true'">
+<div class="ad-slot" [attr.aria-hidden]="shouldLoadAd() ? null : 'true'" *transloco="let t">
   @if (shouldLoadAd()) {
     <ins
       class="adsbygoogle"
@@ -9,6 +9,6 @@
       data-full-width-responsive="true"
     ></ins>
   } @else {
-    <span class="ad-slot__placeholder">Anzeigenplatz</span>
+    <span class="ad-slot__placeholder">{{ t('adSlot.placeholder') }}</span>
   }
 </div>

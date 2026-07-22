@@ -1,0 +1,82 @@
+{
+  "shell": {
+    "skipLink": "Zum Inhalt springen",
+    "themeToggle": {
+      "toDark": "Zu dunklem Design wechseln",
+      "toLight": "Zu hellem Design wechseln"
+    },
+    "footer": {
+      "impressum": "Impressum",
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen"
+    }
+  },
+  "consentBanner": {
+    "ariaLabel": "Cookie-Hinweis",
+    "title": "Cookies & Werbung",
+    "bodyIntro": "Wir verwenden technisch notwendige Cookies, um diese Seite bereitzustellen. Mit deiner Zustimmung nutzen wir außerdem Google AdSense, um die App zu finanzieren – dabei können personenbezogene Daten (z. B. deine IP-Adresse) verarbeitet werden. Mehr dazu in unserer ",
+    "privacyLinkText": "Datenschutzerklärung",
+    "bodyOutro": ".",
+    "deny": "Ablehnen",
+    "acceptAll": "Alle akzeptieren"
+  },
+  "urlInput": {
+    "label": "Link zu YouTube, Facebook, Instagram oder TikTok",
+    "clear": "Zurücksetzen",
+    "pasteAriaLabel": "Link aus der Zwischenablage einfügen",
+    "submit": "Video suchen",
+    "formatError": "Bitte einen gültigen Link von YouTube, Facebook, Instagram oder TikTok einfügen.",
+    "error": {
+      "NETWORK_ERROR": "Server nicht erreichbar. Bitte prüfe deine Internetverbindung und versuche es erneut.",
+      "UNKNOWN_ERROR": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
+  },
+  "videoPreview": {
+    "chooseFormat": "Format wählen",
+    "formatVideo": "Video (MP4)",
+    "quality": "Qualität",
+    "estimatedSize": "Geschätzte Größe",
+    "download": "Herunterladen"
+  },
+  "downloadHistory": {
+    "title": "Zuletzt heruntergeladen",
+    "clear": "Verlauf löschen",
+    "redownloadAriaLabel": "Erneut herunterladen: {{title}}",
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {{count}} Min.",
+    "hoursAgo": "vor {{count}} Std.",
+    "dayAgo": "vor {{count}} Tag",
+    "daysAgo": "vor {{count}} Tagen"
+  },
+  "adSlot": {
+    "placeholder": "Anzeigenplatz",
+    "sidebarAriaLabel": "Werbung"
+  },
+  "home": {
+    "tool": {
+      "headline": "Video herunterladen",
+      "tagline": "Füge einen Link von YouTube, Facebook, Instagram oder TikTok ein."
+    },
+    "website": {
+      "headline": "Amapin",
+      "tagline": "Videos von YouTube, Facebook, Instagram und TikTok herunterladen – als Desktop-App.",
+      "explainer": {
+        "body": "Amapin lädt Videos und Audio direkt auf deinem Rechner herunter – schnell, privat und ohne Wartezeiten durch überlastete Server. Einfach Link einfügen, Format wählen, fertig."
+      },
+      "downloadButton": "Für {{os}} herunterladen",
+      "otherOs": "Anderes Betriebssystem:",
+      "help": {
+        "title": "Hilfe beim ersten Öffnen",
+        "macos": "macOS zeigt beim ersten Öffnen eine Warnung, da die App noch nicht von Apple zertifiziert ist. So geht's: Systemeinstellungen → Datenschutz & Sicherheit → runterscrollen → „Trotzdem öffnen\" klicken.",
+        "windows": "Windows SmartScreen zeigt beim ersten Start eine Warnung, weil die App noch kein offizielles Zertifikat hat. Klicke auf „Weitere Informationen\" und dann auf „Trotzdem ausführen\".",
+        "linux": "Die AppImage-Datei muss nach dem Herunterladen ausführbar gemacht werden: Rechtsklick → Eigenschaften → Ausführung erlauben (oder im Terminal: chmod +x amapin-linux.AppImage), dann per Doppelklick starten."
+      }
+    }
+  },
+  "legal": {
+    "backToHome": "Zurück zur Startseite",
+    "impressum": { "title": "Impressum" },
+    "privacy": { "title": "Datenschutz" },
+    "terms": { "title": "Nutzungsbedingungen" }
+  }
+}

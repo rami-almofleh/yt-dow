@@ -47,3 +47,39 @@
     text-decoration: underline;
   }
 }
+
+.home__explainer {
+  margin-top: 1rem;
+}
+
+.home__help {
+  margin-top: 3rem;
+  text-align: start;
+
+  h2 {
+    font: var(--mat-sys-title-medium);
+    margin: 0 0 0.75rem;
+    text-align: center;
+  }
+
+  details {
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    padding: 0.75rem 0;
+
+    &:last-child {
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+    }
+  }
+
+  summary {
+    cursor: pointer;
+    font: var(--mat-sys-title-small);
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    font: var(--mat-sys-body-medium);
+    color: var(--mat-sys-on-surface-variant);
+    max-width: none;
+  }
+}

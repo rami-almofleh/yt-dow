@@ -1,0 +1,82 @@
+{
+  "shell": {
+    "skipLink": "Skip to content",
+    "themeToggle": {
+      "toDark": "Switch to dark mode",
+      "toLight": "Switch to light mode"
+    },
+    "footer": {
+      "impressum": "Legal Notice",
+      "privacy": "Privacy",
+      "terms": "Terms of Use"
+    }
+  },
+  "consentBanner": {
+    "ariaLabel": "Cookie notice",
+    "title": "Cookies & Advertising",
+    "bodyIntro": "We use technically necessary cookies to provide this site. With your consent, we also use Google AdSense to fund the app - this may involve processing personal data (e.g. your IP address). Learn more in our ",
+    "privacyLinkText": "privacy policy",
+    "bodyOutro": ".",
+    "deny": "Decline",
+    "acceptAll": "Accept all"
+  },
+  "urlInput": {
+    "label": "Link to YouTube, Facebook, Instagram or TikTok",
+    "clear": "Clear",
+    "pasteAriaLabel": "Paste link from clipboard",
+    "submit": "Find video",
+    "formatError": "Please enter a valid link from YouTube, Facebook, Instagram or TikTok.",
+    "error": {
+      "NETWORK_ERROR": "Server unreachable. Please check your internet connection and try again.",
+      "UNKNOWN_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "videoPreview": {
+    "chooseFormat": "Choose format",
+    "formatVideo": "Video (MP4)",
+    "quality": "Quality",
+    "estimatedSize": "Estimated size",
+    "download": "Download"
+  },
+  "downloadHistory": {
+    "title": "Recently downloaded",
+    "clear": "Clear history",
+    "redownloadAriaLabel": "Download again: {{title}}",
+    "justNow": "just now",
+    "minutesAgo": "{{count}} min. ago",
+    "hoursAgo": "{{count}} hr. ago",
+    "dayAgo": "{{count}} day ago",
+    "daysAgo": "{{count}} days ago"
+  },
+  "adSlot": {
+    "placeholder": "Ad space",
+    "sidebarAriaLabel": "Advertisement"
+  },
+  "home": {
+    "tool": {
+      "headline": "Download video",
+      "tagline": "Paste a link from YouTube, Facebook, Instagram or TikTok."
+    },
+    "website": {
+      "headline": "Amapin",
+      "tagline": "Download videos from YouTube, Facebook, Instagram and TikTok - as a desktop app.",
+      "explainer": {
+        "body": "Amapin downloads video and audio straight to your own computer - fast, private, and without waiting on overloaded servers. Just paste a link, pick a format, done."
+      },
+      "downloadButton": "Download for {{os}}",
+      "otherOs": "Other operating system:",
+      "help": {
+        "title": "Help opening the app for the first time",
+        "macos": "macOS shows a warning the first time you open the app, since it isn't certified by Apple yet. Here's how: System Settings → Privacy & Security → scroll down → click \"Open Anyway\".",
+        "windows": "Windows SmartScreen shows a warning the first time you run the app because it doesn't have an official certificate yet. Click \"More info\" and then \"Run anyway\".",
+        "linux": "The AppImage file needs to be made executable after downloading: right-click → Properties → Allow executing (or in a terminal: chmod +x amapin-linux.AppImage), then double-click to launch."
+      }
+    }
+  },
+  "legal": {
+    "backToHome": "Back to home",
+    "impressum": { "title": "Legal Notice" },
+    "privacy": { "title": "Privacy" },
+    "terms": { "title": "Terms of Use" }
+  }
+}

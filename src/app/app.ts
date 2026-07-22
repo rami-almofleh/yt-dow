@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 const THEME_STORAGE_KEY = 'amapin-theme';
 
@@ -42,7 +43,7 @@ function prefersDarkColorScheme(): boolean {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, MatButtonModule],
+  imports: [RouterOutlet, RouterLink, MatButtonModule, TranslocoDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

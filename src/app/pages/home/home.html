@@ -1,26 +1,44 @@
 @if (isElectron) {
-  <section class="home home--tool">
-    <h1>Video herunterladen</h1>
-    <p>Füge einen Link von YouTube, Facebook, Instagram oder TikTok ein.</p>
+  <section class="home home--tool" *transloco="let t">
+    <h1>{{ t('home.tool.headline') }}</h1>
+    <p>{{ t('home.tool.tagline') }}</p>
 
     <app-url-input />
     <app-video-preview />
     <app-download-history />
   </section>
 } @else {
-  <section class="home">
-    <h1>Amapin</h1>
-    <p>Videos von YouTube, Facebook, Instagram und TikTok herunterladen – als Desktop-App.</p>
+  <section class="home" *transloco="let t">
+    <h1>{{ t('home.website.headline') }}</h1>
+    <p>{{ t('home.website.tagline') }}</p>
+
+    <p class="home__explainer">{{ t('home.website.explainer.body') }}</p>
 
     <a mat-flat-button color="primary" class="home__primary-download" [href]="downloadLinks[primary.os]">
-      Für {{ primary.label }} herunterladen
+      {{ t('home.website.downloadButton', { os: primary.label }) }}
     </a>
 
     <p class="home__alt-platforms">
-      Anderes Betriebssystem:
+      {{ t('home.website.otherOs') }}
       @for (platform of others; track platform.os) {
         <a [href]="downloadLinks[platform.os]">{{ platform.label }}</a>
       }
     </p>
+
+    <section class="home__help">
+      <h2>{{ t('home.website.help.title') }}</h2>
+      <details>
+        <summary>macOS</summary>
+        <p>{{ t('home.website.help.macos') }}</p>
+      </details>
+      <details>
+        <summary>Windows</summary>
+        <p>{{ t('home.website.help.windows') }}</p>
+      </details>
+      <details>
+        <summary>Linux</summary>
+        <p>{{ t('home.website.help.linux') }}</p>
+      </details>
+    </section>
   </section>
 }

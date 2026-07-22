@@ -1,0 +1,82 @@
+{
+  "shell": {
+    "skipLink": "Aller au contenu",
+    "themeToggle": {
+      "toDark": "Passer au mode sombre",
+      "toLight": "Passer au mode clair"
+    },
+    "footer": {
+      "impressum": "Mentions légales",
+      "privacy": "Confidentialité",
+      "terms": "Conditions d'utilisation"
+    }
+  },
+  "consentBanner": {
+    "ariaLabel": "Avis sur les cookies",
+    "title": "Cookies et publicité",
+    "bodyIntro": "Nous utilisons des cookies techniquement nécessaires pour fournir ce site. Avec votre consentement, nous utilisons également Google AdSense pour financer l'application - cela peut impliquer le traitement de données personnelles (par ex. votre adresse IP). En savoir plus dans notre ",
+    "privacyLinkText": "politique de confidentialité",
+    "bodyOutro": ".",
+    "deny": "Refuser",
+    "acceptAll": "Tout accepter"
+  },
+  "urlInput": {
+    "label": "Lien YouTube, Facebook, Instagram ou TikTok",
+    "clear": "Réinitialiser",
+    "pasteAriaLabel": "Coller le lien depuis le presse-papiers",
+    "submit": "Rechercher la vidéo",
+    "formatError": "Veuillez saisir un lien valide de YouTube, Facebook, Instagram ou TikTok.",
+    "error": {
+      "NETWORK_ERROR": "Serveur injoignable. Vérifiez votre connexion internet et réessayez.",
+      "UNKNOWN_ERROR": "Une erreur s'est produite. Veuillez réessayer."
+    }
+  },
+  "videoPreview": {
+    "chooseFormat": "Choisir le format",
+    "formatVideo": "Vidéo (MP4)",
+    "quality": "Qualité",
+    "estimatedSize": "Taille estimée",
+    "download": "Télécharger"
+  },
+  "downloadHistory": {
+    "title": "Téléchargements récents",
+    "clear": "Effacer l'historique",
+    "redownloadAriaLabel": "Télécharger à nouveau : {{title}}",
+    "justNow": "à l'instant",
+    "minutesAgo": "il y a {{count}} min.",
+    "hoursAgo": "il y a {{count}} h.",
+    "dayAgo": "il y a {{count}} jour",
+    "daysAgo": "il y a {{count}} jours"
+  },
+  "adSlot": {
+    "placeholder": "Emplacement publicitaire",
+    "sidebarAriaLabel": "Publicité"
+  },
+  "home": {
+    "tool": {
+      "headline": "Télécharger une vidéo",
+      "tagline": "Collez un lien YouTube, Facebook, Instagram ou TikTok."
+    },
+    "website": {
+      "headline": "Amapin",
+      "tagline": "Téléchargez des vidéos depuis YouTube, Facebook, Instagram et TikTok - en application de bureau.",
+      "explainer": {
+        "body": "Amapin télécharge vidéos et audio directement sur votre ordinateur - rapide, privé, sans attente due à des serveurs surchargés. Collez un lien, choisissez un format, terminé."
+      },
+      "downloadButton": "Télécharger pour {{os}}",
+      "otherOs": "Autre système d'exploitation :",
+      "help": {
+        "title": "Aide pour la première ouverture",
+        "macos": "macOS affiche un avertissement à la première ouverture, car l'application n'est pas encore certifiée par Apple. Voici comment faire : Réglages système → Confidentialité et sécurité → faire défiler vers le bas → cliquer sur « Ouvrir quand même ».",
+        "windows": "Windows SmartScreen affiche un avertissement au premier lancement, car l'application n'a pas encore de certificat officiel. Cliquez sur « Plus d'informations » puis sur « Exécuter quand même ».",
+        "linux": "Le fichier AppImage doit être rendu exécutable après téléchargement : clic droit → Propriétés → Autoriser l'exécution (ou dans un terminal : chmod +x amapin-linux.AppImage), puis double-cliquez pour lancer."
+      }
+    }
+  },
+  "legal": {
+    "backToHome": "Retour à l'accueil",
+    "impressum": { "title": "Mentions légales" },
+    "privacy": { "title": "Confidentialité" },
+    "terms": { "title": "Conditions d'utilisation" }
+  }
+}
