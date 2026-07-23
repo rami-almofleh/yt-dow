@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 
 import type { DownloadHistoryEntry } from './models/download-history-entry.model';
 
-const STORAGE_KEY = 'amapin-download-history';
+const STORAGE_KEY = 'reelio-download-history';
 const MAX_ENTRIES = 10;
 
 @Injectable({ providedIn: 'root' })

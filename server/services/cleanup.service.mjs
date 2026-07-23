@@ -8,7 +8,7 @@ import path from 'node:path';
 const MAX_AGE_MS = 30 * 60 * 1000;
 
 /**
- * Räumt amapin-*.mp4-Temp-Dateien auf, die ein vorheriger Prozess (z. B. nach
+ * Räumt reelio-*.mp4-Temp-Dateien auf, die ein vorheriger Prozess (z. B. nach
  * einem Absturz oder harten Neustart) nicht mehr selbst löschen konnte.
  */
 export async function sweepOrphanedTempFiles() {
@@ -22,7 +22,7 @@ export async function sweepOrphanedTempFiles() {
 
   const now = Date.now();
   for (const entry of entries) {
-    if (!entry.startsWith('amapin-') || !entry.endsWith('.mp4')) continue;
+    if (!entry.startsWith('reelio-') || !entry.endsWith('.mp4')) continue;
 
     const fullPath = path.join(dir, entry);
     try {

@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 
 import { updateGoogleAdConsent } from './google-consent';
 
-const CONSENT_STORAGE_KEY = 'amapin-ads-consent';
+const CONSENT_STORAGE_KEY = 'reelio-ads-consent';
 
 export type ConsentStatus = 'undecided' | 'granted' | 'denied';
 

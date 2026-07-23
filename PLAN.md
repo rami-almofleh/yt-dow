@@ -1,4 +1,4 @@
-# Amapin – Projektplan (Social-Media Video/Audio-Downloader)
+# Reelio – Projektplan (Social-Media Video/Audio-Downloader)
 
 > **Für Claude: Diese Datei IMMER zuerst lesen, bevor irgendetwas an diesem Projekt gemacht wird.**
 
@@ -286,7 +286,7 @@ Ergebnis:
 - **Aufräumen verwaister Temp-Dateien** (`server/services/cleanup.service.mjs`): Fängt den Fall ab, dass
   der Server-Prozess selbst hart abstürzt/gekillt wird, während ein Video-Merge in eine Temp-Datei
   schreibt (dann greift das Cleanup-in-`finally` aus Schritt 4 nicht mehr). Läuft beim Start und danach
-  alle 15 Minuten, löscht `amapin-*.mp4`-Dateien im System-Temp-Verzeichnis, die älter als 30 Minuten
+  alle 15 Minuten, löscht `reelio-*.mp4`-Dateien im System-Temp-Verzeichnis, die älter als 30 Minuten
   sind (deutlich länger als der Download-Timeout, also garantiert kein aktiver Download mehr). Live
   getestet: eine künstlich auf 40 Minuten "gealterte" Testdatei wurde beim Serverstart entfernt, eine
   frische blieb unangetastet.
@@ -552,7 +552,7 @@ Ergebnis:
   einfach zu übernehmen, wurde der komplette Consent-Flow jetzt live im Browser verifiziert, bevor der
   Schritt als erledigt markiert wird (siehe unten) – kein Blindvertrauen auf vorhandenen Code.
 - **`AdConsentService`** (`src/app/core/ad-consent.service.ts`): Signal-basierter Status
-  (`undecided`/`granted`/`denied`), persistiert in `localStorage` (`amapin-ads-consent`, defensiv per
+  (`undecided`/`granted`/`denied`), persistiert in `localStorage` (`reelio-ads-consent`, defensiv per
   `try/catch` wie der Theme-Toggle aus Schritt 6). `granted()` ist exakt das Gate, das `AdSlot` aus
   Schritt 10 bereits konsumiert – keine Änderung an `AdSlot` nötig. `reopenBanner()` erlaubt das
   nachträgliche Ändern der Wahl.
@@ -623,14 +623,14 @@ Ergebnis (Zwischenstand):
   Schreiben nachgeschaut, was wirklich passiert – `server/middleware/requestLogger.mjs` loggt bewusst
   **keine** IP-Adressen (nur Methode/Pfad/Status/Dauer), IP-Adressen fließen nur kurzzeitig ins
   In-Memory-Rate-Limiting (Schritt 5, 10-Minuten-Fenster) ein; alle drei tatsächlich verwendeten
-  `localStorage`-Keys (`amapin-theme`, `amapin-ads-consent`, `amapin-download-history`) sind einzeln mit
+  `localStorage`-Keys (`reelio-theme`, `reelio-ads-consent`, `reelio-download-history`) sind einzeln mit
   Zweck benannt, keine erfundenen/generischen "Cookies"-Floskeln. Abschnitt zu Google AdSense verweist
   konsistent auf den bereits gebauten Consent-Mechanismus aus Schritt 11 (Standard „denied“, Widerruf
   jederzeit über „Cookie-Einstellungen“). Abschnitt „Hosting“ bewusst noch als Platzhalter markiert, da
   Schritt 15 (Deployment) den tatsächlichen Anbieter erst festlegt – hier nichts vorweggenommen, was noch
   nicht feststeht.
 - **Nutzungsbedingungen mit dem im Plan geforderten Disclaimer:** Abschnitt 4 stellt unmissverständlich
-  klar, dass Amapin selbst keine Nutzungsrechte an den abgerufenen Inhalten einräumt und die
+  klar, dass Reelio selbst keine Nutzungsrechte an den abgerufenen Inhalten einräumt und die
   Verantwortung für eine rechtmäßige Nutzung (Urheberrecht, Plattform-AGB) beim Nutzer liegt – als
   hervorgehobener `<strong>`-Absatz, nicht im Fließtext versteckt.
 - **Footer erweitert** (`app.html`/`app.scss`): jetzt vier Einträge (Impressum, Datenschutz,
@@ -701,7 +701,7 @@ server_name yt-dow.almofleh.com;
         try_files $uri =404;
     }
 
-    root /home/rami/apps/yt-dow/dist/amapin/browser;
+    root /home/rami/apps/yt-dow/dist/reelio/browser;
     index index.html index.htm;
 
     location / {

@@ -45,7 +45,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}-artifact
-          path: release/amapin-${{ matrix.target }}.*
+          path: release/reelio-${{ matrix.target }}.*
           if-no-files-found: error
 
   # Single rolling "latest" release, continuously overwritten - the download

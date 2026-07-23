@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "amapin": {
+    "reelio": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "amapin:build:production"
+              "buildTarget": "reelio:build:production"
             },
             "development": {
-              "buildTarget": "amapin:build:development"
+              "buildTarget": "reelio:build:development"
             }
           },
           "defaultConfiguration": "development"

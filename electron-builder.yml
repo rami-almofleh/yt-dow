@@ -1,5 +1,5 @@
-appId: io.inits.amapin
-productName: amapin
+appId: io.inits.reelio
+productName: reelio
 directories:
   output: release
 # electron-builder generates the per-platform .icns/.ico from this single
@@ -8,7 +8,7 @@ icon: public/logo.png
 files:
   - electron/**/*
   - server/**/*
-  - dist/amapin/browser/**/*
+  - dist/reelio/browser/**/*
   - package.json
   - node_modules/**/*
 extraResources:
@@ -29,13 +29,13 @@ mac:
   hardenedRuntime: false
   # Version-less filename so the landing page's GitHub "latest" download link
   # (see src/app/core/downloads.config.ts) never needs updating per release.
-  artifactName: 'amapin-mac.${ext}'
+  artifactName: 'reelio-mac.${ext}'
 win:
   target: nsis
-  artifactName: 'amapin-win.${ext}'
+  artifactName: 'reelio-win.${ext}'
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
 linux:
   target: AppImage
-  artifactName: 'amapin-linux.${ext}'
+  artifactName: 'reelio-linux.${ext}'

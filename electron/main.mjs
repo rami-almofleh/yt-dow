@@ -61,7 +61,7 @@ async function createWindow() {
   // tell "our packaged app" apart from "some other Electron-based renderer".
   // This app-specific marker is what src/app/core/electron-detection.ts
   // actually checks for.
-  mainWindow.webContents.setUserAgent(`${mainWindow.webContents.getUserAgent()} AmapinDesktop/1.0`);
+  mainWindow.webContents.setUserAgent(`${mainWindow.webContents.getUserAgent()} ReelioDesktop/1.0`);
   mainWindow.loadURL(`http://127.0.0.1:${port}/`);
 
   mainWindow.on('closed', () => {

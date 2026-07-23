@@ -22,7 +22,7 @@ const INFO_TIMEOUT_MS = 20_000;
 // demoted, unauthenticated jar. Instead, every call gets a fresh disposable
 // copy that yt-dlp is free to mutate/corrupt without touching the source of
 // truth.
-const COOKIES_WORKING_PATH = path.join(os.tmpdir(), 'amapin-ytdlp-cookies-working.txt');
+const COOKIES_WORKING_PATH = path.join(os.tmpdir(), 'reelio-ytdlp-cookies-working.txt');
 
 async function buildCookiesArgs() {
   if (!config.cookiesPath) return [];
@@ -243,7 +243,7 @@ function buildVideoFormatSelector(height) {
  * owns the returned path and must delete it once it's done streaming it out.
  */
 export async function downloadMergedVideo({ url, height, signal }) {
-  const tempFilePath = path.join(os.tmpdir(), `amapin-${randomUUID()}.mp4`);
+  const tempFilePath = path.join(os.tmpdir(), `reelio-${randomUUID()}.mp4`);
   const selector = buildVideoFormatSelector(height);
 
   try {
@@ -301,7 +301,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
  * entirely. The caller owns the returned path and must delete it once done.
  */
 export async function downloadBestAudio({ url, signal }) {
-  const tempFilePath = path.join(os.tmpdir(), `amapin-${randomUUID()}.audio`);
+  const tempFilePath = path.join(os.tmpdir(), `reelio-${randomUUID()}.audio`);
 
   try {
     await ytDlpWrap.execPromise(

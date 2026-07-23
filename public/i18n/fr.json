@@ -58,10 +58,10 @@
       "tagline": "Collez un lien YouTube, Facebook, Instagram ou TikTok."
     },
     "website": {
-      "headline": "Amapin",
+      "headline": "Reelio",
       "tagline": "Téléchargez des vidéos depuis YouTube, Facebook, Instagram et TikTok - en application de bureau.",
       "explainer": {
-        "body": "Amapin télécharge vidéos et audio directement sur votre ordinateur - rapide, privé, sans attente due à des serveurs surchargés. Collez un lien, choisissez un format, terminé."
+        "body": "Reelio télécharge vidéos et audio directement sur votre ordinateur - rapide, privé, sans attente due à des serveurs surchargés. Collez un lien, choisissez un format, terminé."
       },
       "downloadButton": "Télécharger pour {{os}}",
       "otherOs": "Autre système d'exploitation :",
@@ -69,7 +69,7 @@
         "title": "Aide pour la première ouverture",
         "macos": "macOS affiche un avertissement à la première ouverture, car l'application n'est pas encore certifiée par Apple. Voici comment faire : Réglages système → Confidentialité et sécurité → faire défiler vers le bas → cliquer sur « Ouvrir quand même ».",
         "windows": "Windows SmartScreen affiche un avertissement au premier lancement, car l'application n'a pas encore de certificat officiel. Cliquez sur « Plus d'informations » puis sur « Exécuter quand même ».",
-        "linux": "Le fichier AppImage doit être rendu exécutable après téléchargement : clic droit → Propriétés → Autoriser l'exécution (ou dans un terminal : chmod +x amapin-linux.AppImage), puis double-cliquez pour lancer."
+        "linux": "Le fichier AppImage doit être rendu exécutable après téléchargement : clic droit → Propriétés → Autoriser l'exécution (ou dans un terminal : chmod +x reelio-linux.AppImage), puis double-cliquez pour lancer."
       }
     }
   },

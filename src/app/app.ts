@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-const THEME_STORAGE_KEY = 'amapin-theme';
+const THEME_STORAGE_KEY = 'reelio-theme';
 
 // localStorage can throw (Safari private browsing, blocked by an extension,
 // or simply absent in the test environment) - the theme preference is a nice

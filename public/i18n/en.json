@@ -58,10 +58,10 @@
       "tagline": "Paste a link from YouTube, Facebook, Instagram or TikTok."
     },
     "website": {
-      "headline": "Amapin",
+      "headline": "Reelio",
       "tagline": "Download videos from YouTube, Facebook, Instagram and TikTok - as a desktop app.",
       "explainer": {
-        "body": "Amapin downloads video and audio straight to your own computer - fast, private, and without waiting on overloaded servers. Just paste a link, pick a format, done."
+        "body": "Reelio downloads video and audio straight to your own computer - fast, private, and without waiting on overloaded servers. Just paste a link, pick a format, done."
       },
       "downloadButton": "Download for {{os}}",
       "otherOs": "Other operating system:",
@@ -69,7 +69,7 @@
         "title": "Help opening the app for the first time",
         "macos": "macOS shows a warning the first time you open the app, since it isn't certified by Apple yet. Here's how: System Settings → Privacy & Security → scroll down → click \"Open Anyway\".",
         "windows": "Windows SmartScreen shows a warning the first time you run the app because it doesn't have an official certificate yet. Click \"More info\" and then \"Run anyway\".",
-        "linux": "The AppImage file needs to be made executable after downloading: right-click → Properties → Allow executing (or in a terminal: chmod +x amapin-linux.AppImage), then double-click to launch."
+        "linux": "The AppImage file needs to be made executable after downloading: right-click → Properties → Allow executing (or in a terminal: chmod +x reelio-linux.AppImage), then double-click to launch."
       }
     }
   },
