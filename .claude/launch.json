@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start", "--", "--port", "4201"],
       "port": 4201
+    },
+    {
+      "name": "reelio-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "proxy"],
+      "port": 3000
     }
   ]
 }

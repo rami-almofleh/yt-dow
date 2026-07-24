@@ -2,7 +2,7 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslocoDirective } from '@jsverse/transloco';
 
@@ -18,7 +18,7 @@ import { PlatformIcon } from '../../shared/platform-icon/platform-icon';
     MatButtonModule,
     MatButtonToggleModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSelectModule,
     PlatformIcon,
     TranslocoDirective,
@@ -39,6 +39,15 @@ export class VideoPreview {
     const info = this.lookup.videoInfo();
     const option = info?.audioFormats.find((f) => f.id === this.selection.format());
     return formatFileSize(option?.estimatedBytes ?? null);
+  });
+
+  // yt-dlp's percent comes back with decimals (e.g. 45.2); rounded for
+  // display, and only shown once yt-dlp has actually reported a real number -
+  // during 'preparing'/'finalizing' this stays null and the bar falls back to
+  // indeterminate mode instead of misleadingly showing a stale value.
+  protected readonly progressPercent = computed(() => {
+    const percent = this.downloadService.progress()?.percent;
+    return percent != null ? Math.round(percent) : null;
   });
 
   constructor() {

@@ -5,6 +5,9 @@
       "toDark": "Switch to dark mode",
       "toLight": "Switch to light mode"
     },
+    "languageSwitcher": {
+      "label": "Choose language"
+    },
     "footer": {
       "impressum": "Legal Notice",
       "privacy": "Privacy",
@@ -29,14 +32,21 @@
     "error": {
       "NETWORK_ERROR": "Server unreachable. Please check your internet connection and try again.",
       "UNKNOWN_ERROR": "Something went wrong. Please try again."
-    }
+    },
+    "loading": "Fetching video information…"
   },
   "videoPreview": {
     "chooseFormat": "Choose format",
     "formatVideo": "Video (MP4)",
     "quality": "Quality",
     "estimatedSize": "Estimated size",
-    "download": "Download"
+    "download": "Download",
+    "progress": {
+      "preparing": "Preparing download…",
+      "downloading": "Downloading…",
+      "finalizing": "Processing file…",
+      "eta": "ETA"
+    }
   },
   "downloadHistory": {
     "title": "Recently downloaded",

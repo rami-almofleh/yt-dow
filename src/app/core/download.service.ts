@@ -14,9 +14,26 @@ export interface DownloadParams {
   platformLabel: string;
 }
 
+export type DownloadPhase = 'preparing' | 'downloading' | 'finalizing';
+
+export interface DownloadProgress {
+  phase: DownloadPhase;
+  percent: number | null;
+  speed: string | null;
+  eta: string | null;
+}
+
 // Passend zum Backend-seitigen Hard-Timeout (server/config.mjs, downloadTimeoutMs) -
 // verhindert, dass die UI bei einem hängenden Request für immer im Lade-Zustand bleibt.
 const DOWNLOAD_TIMEOUT_MS = 10 * 60 * 1000;
+
+// Der eigentliche Download läuft komplett serverseitig (yt-dlp lädt + ffmpeg
+// merged/konvertiert), BEVOR überhaupt die erste Antwort-Bytes beim Client
+// ankommen (siehe server/routes/download.route.mjs) - ein einzelner fetch()
+// hätte also für die gesamte Dauer null sichtbaren Fortschritt. Diese jobId
+// lässt den Client denselben Lauf nebenher über einen zweiten, leichten
+// Endpunkt abfragen (server/services/progress.service.mjs).
+const POLL_INTERVAL_MS = 750;
 
 @Injectable({ providedIn: 'root' })
 export class DownloadService {
@@ -25,17 +42,24 @@ export class DownloadService {
 
   readonly isDownloading = signal(false);
 
+  private readonly _progress = signal<DownloadProgress | null>(null);
+  readonly progress = this._progress.asReadonly();
+
   async download(params: DownloadParams): Promise<void> {
     if (this.isDownloading()) {
       return;
     }
     this.isDownloading.set(true);
+    this._progress.set({ phase: 'preparing', percent: null, speed: null, eta: null });
+
+    const jobId = crypto.randomUUID();
+    const pollHandle = setInterval(() => void this.pollProgress(jobId), POLL_INTERVAL_MS);
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), DOWNLOAD_TIMEOUT_MS);
 
     try {
-      const response = await fetch(this.buildUrl(params), { signal: controller.signal });
+      const response = await fetch(this.buildUrl(params, jobId), { signal: controller.signal });
 
       if (!response.ok) {
         this.snackBar.open(await this.extractErrorMessage(response), 'OK', { duration: 6000 });
@@ -58,12 +82,33 @@ export class DownloadService {
       this.snackBar.open(message, 'OK', { duration: 6000 });
     } finally {
       clearTimeout(timeout);
+      clearInterval(pollHandle);
       this.isDownloading.set(false);
+      this._progress.set(null);
     }
   }
 
-  private buildUrl(params: DownloadParams): string {
-    const query = new URLSearchParams({ url: params.sourceUrl, format: params.format, title: params.title });
+  private async pollProgress(jobId: string): Promise<void> {
+    try {
+      const response = await fetch(`/api/download-progress/${jobId}`);
+      if (!response.ok || !this.isDownloading()) return;
+      const body: { job: DownloadProgress | null } = await response.json();
+      if (body.job && this.isDownloading()) {
+        this._progress.set(body.job);
+      }
+    } catch {
+      // Bester Versuch - ein einzelner verpasster Tick lässt den Balken kurz
+      // stehen, ist aber kein Grund, den eigentlichen Download abzubrechen.
+    }
+  }
+
+  private buildUrl(params: DownloadParams, jobId: string): string {
+    const query = new URLSearchParams({
+      url: params.sourceUrl,
+      format: params.format,
+      title: params.title,
+      jobId,
+    });
     if (params.format === 'mp4' && params.height != null) {
       query.set('height', String(params.height));
     }

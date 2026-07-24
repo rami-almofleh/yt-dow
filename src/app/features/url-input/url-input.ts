@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 import { DownloadSelectionService } from '../../core/download-selection.service';
@@ -18,7 +18,7 @@ import { PlatformIcon } from '../../shared/platform-icon/platform-icon';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinnerModule,
+    MatProgressBarModule,
     PlatformIcon,
     TranslocoDirective,
   ],

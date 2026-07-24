@@ -58,6 +58,24 @@
   color: var(--mat-sys-on-surface);
 }
 
+.shell__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lang-option__check {
+  display: inline-flex;
+  width: 18px;
+  color: var(--mat-sys-primary);
+}
+
 .shell__body {
   flex: 1;
   display: flex;

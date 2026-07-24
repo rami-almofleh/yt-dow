@@ -57,12 +57,30 @@
         [disabled]="downloadService.isDownloading()"
         (click)="onDownload()"
       >
-        @if (downloadService.isDownloading()) {
-          <mat-progress-spinner diameter="20" mode="indeterminate" />
-        } @else {
-          {{ t('videoPreview.download') }}
-        }
+        {{ t('videoPreview.download') }}
       </button>
+
+      @if (downloadService.isDownloading()) {
+        <div class="preview__progress" role="status" aria-live="polite">
+          @if (progressPercent(); as percent) {
+            <mat-progress-bar mode="determinate" [value]="percent" />
+            <p class="preview__progress-label">
+              {{ percent }}%
+              @if (downloadService.progress()?.speed; as speed) {
+                · {{ speed }}
+              }
+              @if (downloadService.progress()?.eta; as eta) {
+                · {{ t('videoPreview.progress.eta') }} {{ eta }}
+              }
+            </p>
+          } @else {
+            <mat-progress-bar mode="indeterminate" />
+            <p class="preview__progress-label">
+              {{ t('videoPreview.progress.' + (downloadService.progress()?.phase ?? 'preparing')) }}
+            </p>
+          }
+        </div>
+      }
     </div>
   </article>
 }

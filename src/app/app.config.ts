@@ -12,7 +12,7 @@ import { provideTransloco, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
-import { applyDocumentLanguage, detectBrowserLang } from './core/language-detection';
+import { applyDocumentLanguage, detectBrowserLang, readStoredLang } from './core/language-detection';
 import { TranslocoHttpLoader } from './core/transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -36,7 +36,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const transloco = inject(TranslocoService);
       const document = inject(DOCUMENT);
-      const lang = detectBrowserLang();
+      const lang = readStoredLang() ?? detectBrowserLang();
 
       applyDocumentLanguage(document, lang);
       transloco.langChanges$.subscribe((activeLang) => applyDocumentLanguage(document, activeLang));

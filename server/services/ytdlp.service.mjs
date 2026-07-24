@@ -48,6 +48,23 @@ function buildSpawnOptions() {
   return { env: { ...process.env, PATH: `${denoDir}${path.delimiter}${process.env.PATH ?? ''}` } };
 }
 
+// yt-dlp-wrap's execPromise() discards the progress events it parses from
+// yt-dlp's own stderr (percent/totalSize/currentSpeed/eta - see its
+// emitYoutubeDlEvents()); its EventEmitter-based exec() exposes the exact
+// same parsing, so this just re-wraps it as a promise while forwarding
+// 'progress' events, giving real download progress with no custom
+// percent/speed math of our own.
+function execWithProgress(args, options, signal, onProgress) {
+  return new Promise((resolve, reject) => {
+    const emitter = ytDlpWrap.exec(args, options, signal);
+    if (onProgress) {
+      emitter.on('progress', onProgress);
+    }
+    emitter.on('error', reject);
+    emitter.on('close', () => resolve());
+  });
+}
+
 function mapYtDlpError(err) {
   const fullMessage = String(err?.message ?? err ?? '');
   // Only mapYtDlpError() ever sees yt-dlp's raw output - log it so a failure
@@ -242,12 +259,12 @@ function buildVideoFormatSelector(height) {
  * temp file first is the only way to get a genuinely valid MP4. The caller
  * owns the returned path and must delete it once it's done streaming it out.
  */
-export async function downloadMergedVideo({ url, height, signal }) {
+export async function downloadMergedVideo({ url, height, signal, onProgress }) {
   const tempFilePath = path.join(os.tmpdir(), `reelio-${randomUUID()}.mp4`);
   const selector = buildVideoFormatSelector(height);
 
   try {
-    await ytDlpWrap.execPromise(
+    await execWithProgress(
       [
         url,
         '-f',
@@ -275,6 +292,7 @@ export async function downloadMergedVideo({ url, height, signal }) {
       ],
       buildSpawnOptions(),
       signal,
+      onProgress,
     );
   } catch (err) {
     await fs.promises.unlink(tempFilePath).catch(() => {});
@@ -300,11 +318,11 @@ export async function downloadMergedVideo({ url, height, signal }) {
  * they're a complete, seekable file. A pre-downloaded file sidesteps the bug
  * entirely. The caller owns the returned path and must delete it once done.
  */
-export async function downloadBestAudio({ url, signal }) {
+export async function downloadBestAudio({ url, signal, onProgress }) {
   const tempFilePath = path.join(os.tmpdir(), `reelio-${randomUUID()}.audio`);
 
   try {
-    await ytDlpWrap.execPromise(
+    await execWithProgress(
       [
         url,
         '-f',
@@ -327,6 +345,7 @@ export async function downloadBestAudio({ url, signal }) {
       ],
       buildSpawnOptions(),
       signal,
+      onProgress,
     );
   } catch (err) {
     await fs.promises.unlink(tempFilePath).catch(() => {});

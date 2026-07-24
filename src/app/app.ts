@@ -1,7 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+
+import {
+  LANG_LABELS,
+  SUPPORTED_LANGS,
+  SupportedLang,
+  writeStoredLang,
+} from './core/language-detection';
 
 const THEME_STORAGE_KEY = 'reelio-theme';
 
@@ -43,12 +52,23 @@ function prefersDarkColorScheme(): boolean {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, MatButtonModule, TranslocoDirective],
+  imports: [RouterOutlet, RouterLink, MatButtonModule, MatMenuModule, TranslocoDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
+  private readonly transloco = inject(TranslocoService);
+
   protected readonly isDarkMode = signal(this.resolveInitialDarkMode());
+
+  protected readonly langs = SUPPORTED_LANGS;
+  protected readonly langLabels = LANG_LABELS;
+  // App-Initializer (app.config.ts) hat setActiveLang() schon vor dem ersten
+  // Render aufgerufen - toSignal() liefert also ab dem ersten Wert die echte
+  // aktive Sprache, nie einen Zwischenzustand.
+  protected readonly currentLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  });
 
   constructor() {
     if (readStoredTheme()) {
@@ -67,6 +87,13 @@ export class App {
     this.isDarkMode.set(next);
     this.applyColorScheme(next);
     writeStoredTheme(next ? 'dark' : 'light');
+  }
+
+  // setActiveLang() triggers langChanges$ (see app.config.ts), which re-runs
+  // applyDocumentLanguage() itself - no need to touch <html lang>/dir here.
+  protected setLanguage(lang: SupportedLang): void {
+    this.transloco.setActiveLang(lang);
+    writeStoredLang(lang);
   }
 
   private resolveInitialDarkMode(): boolean {

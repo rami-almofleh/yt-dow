@@ -5,6 +5,9 @@
       "toDark": "Zu dunklem Design wechseln",
       "toLight": "Zu hellem Design wechseln"
     },
+    "languageSwitcher": {
+      "label": "Sprache wählen"
+    },
     "footer": {
       "impressum": "Impressum",
       "privacy": "Datenschutz",
@@ -29,14 +32,21 @@
     "error": {
       "NETWORK_ERROR": "Server nicht erreichbar. Bitte prüfe deine Internetverbindung und versuche es erneut.",
       "UNKNOWN_ERROR": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
-    }
+    },
+    "loading": "Rufe Video-Informationen ab…"
   },
   "videoPreview": {
     "chooseFormat": "Format wählen",
     "formatVideo": "Video (MP4)",
     "quality": "Qualität",
     "estimatedSize": "Geschätzte Größe",
-    "download": "Herunterladen"
+    "download": "Herunterladen",
+    "progress": {
+      "preparing": "Bereite Download vor…",
+      "downloading": "Lade herunter…",
+      "finalizing": "Verarbeite Datei…",
+      "eta": "noch"
+    }
   },
   "downloadHistory": {
     "title": "Zuletzt heruntergeladen",

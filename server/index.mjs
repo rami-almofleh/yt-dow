@@ -8,7 +8,7 @@ import { config } from './config.mjs';
 import { requestLogger } from './middleware/requestLogger.mjs';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.mjs';
 import { downloadRateLimiter, infoRateLimiter } from './middleware/rateLimit.mjs';
-import { downloadRouter } from './routes/download.route.mjs';
+import { downloadProgressRouter, downloadRouter } from './routes/download.route.mjs';
 import { healthRouter } from './routes/health.route.mjs';
 import { infoRouter } from './routes/info.route.mjs';
 import { sweepOrphanedTempFiles } from './services/cleanup.service.mjs';
@@ -26,6 +26,7 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use('/api', healthRouter);
+app.use('/api', downloadProgressRouter);
 if (config.appMode === 'desktop') {
   app.use('/api', infoRouter);
   app.use('/api', downloadRouter);

@@ -5,6 +5,9 @@
       "toDark": "التبديل إلى الوضع الداكن",
       "toLight": "التبديل إلى الوضع الفاتح"
     },
+    "languageSwitcher": {
+      "label": "اختر اللغة"
+    },
     "footer": {
       "impressum": "بيانات الناشر",
       "privacy": "الخصوصية",
@@ -29,14 +32,21 @@
     "error": {
       "NETWORK_ERROR": "تعذّر الوصول إلى الخادم. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
       "UNKNOWN_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
-    }
+    },
+    "loading": "جارٍ جلب معلومات الفيديو…"
   },
   "videoPreview": {
     "chooseFormat": "اختر الصيغة",
     "formatVideo": "فيديو (MP4)",
     "quality": "الجودة",
     "estimatedSize": "الحجم التقريبي",
-    "download": "تحميل"
+    "download": "تحميل",
+    "progress": {
+      "preparing": "جارٍ تجهيز التحميل…",
+      "downloading": "جارٍ التحميل…",
+      "finalizing": "جارٍ معالجة الملف…",
+      "eta": "المتبقي"
+    }
   },
   "downloadHistory": {
     "title": "أحدث التنزيلات",

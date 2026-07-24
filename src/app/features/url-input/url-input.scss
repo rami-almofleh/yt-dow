@@ -40,8 +40,15 @@
 .field-message {
   margin: 0;
   font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
 
   &--error {
     color: var(--mat-sys-error);
   }
+}
+
+.url-form__progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
 }

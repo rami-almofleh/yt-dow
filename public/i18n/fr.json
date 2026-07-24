@@ -5,6 +5,9 @@
       "toDark": "Passer au mode sombre",
       "toLight": "Passer au mode clair"
     },
+    "languageSwitcher": {
+      "label": "Choisir la langue"
+    },
     "footer": {
       "impressum": "Mentions légales",
       "privacy": "Confidentialité",
@@ -29,14 +32,21 @@
     "error": {
       "NETWORK_ERROR": "Serveur injoignable. Vérifiez votre connexion internet et réessayez.",
       "UNKNOWN_ERROR": "Une erreur s'est produite. Veuillez réessayer."
-    }
+    },
+    "loading": "Récupération des informations…"
   },
   "videoPreview": {
     "chooseFormat": "Choisir le format",
     "formatVideo": "Vidéo (MP4)",
     "quality": "Qualité",
     "estimatedSize": "Taille estimée",
-    "download": "Télécharger"
+    "download": "Télécharger",
+    "progress": {
+      "preparing": "Préparation du téléchargement…",
+      "downloading": "Téléchargement en cours…",
+      "finalizing": "Traitement du fichier…",
+      "eta": "reste"
+    }
   },
   "downloadHistory": {
     "title": "Téléchargements récents",
