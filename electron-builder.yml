@@ -11,6 +11,10 @@ files:
   - dist/reelio/browser/**/*
   - package.json
   - node_modules/**/*
+  # electron/main.mjs loads this at runtime for the window/dock icon - without
+  # it, the packaged app crashed on startup before the window ever opened
+  # (app.dock.setIcon() threw synchronously on the missing file).
+  - public/logo.png
 extraResources:
   - from: resources/bin
     to: bin
